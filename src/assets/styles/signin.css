@@ -1,0 +1,24 @@
+.signFormContainer{
+    position: relative;
+    min-height: 100vh;
+}
+.signForm{
+
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    background-color: rgb(255, 255, 255);
+    text-align: left;
+    width: 60vw;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+@media only screen and (max-width: 600px) {
+    .signForm {
+        width: 100vw;
+    }
+}
