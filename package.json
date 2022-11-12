@@ -1,44 +1,24 @@
 {
-  "name": "portfolio-builder-prototype",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.2.2",
-    "dotenv": "^16.0.3",
-    "mongodb": "^4.11.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.3",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "social-media-app",
+  "version": "1.0.0",
+  "description": "- Add `config.env` file to the project folder, then add the following:\r ```\r PORT = <integer>\r mongoURL = <mongodb connect url>\r ```",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "serverStart": "node server/app.js",
-    "serverDev": "nodemon server/app.js"
+    "client": "npm start --prefix client",
+    "server": "npm start --prefix server",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryan-byte/node-social-media-app.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ryan-byte/node-social-media-app/issues"
+  },
+  "homepage": "https://github.com/ryan-byte/node-social-media-app#readme",
+  "dependencies": {
+    "concurrently": "^7.5.0"
   }
 }
