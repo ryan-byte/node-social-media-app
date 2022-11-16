@@ -2,9 +2,14 @@ const crypto = require("crypto");
 
 let digestAlgorithm = "sha384";
 
-function hashPassword(password,key){
-    const hashSalt = crypto.randomBytes(16).toString("hex");
-    return {hashSalt,hashedPassword:crypto.pbkdf2Sync(password,hashSalt,1000,32,digestAlgorithm).toString("hex")};
+function hashSalt(){
+    const salt = crypto.randomBytes(16).toString("hex");
+    return salt;
 }
 
-module.exports = hashPassword;
+function hashPassword(password,hashSalt){
+    let hashedPass = crypto.pbkdf2Sync(password,hashSalt,1000,32,digestAlgorithm).toString("hex");
+    return hashedPass;
+}
+
+module.exports = {hashPassword,hashSalt};

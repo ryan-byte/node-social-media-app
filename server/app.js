@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 //endpoints
 
 app.post("/signup",routes.userSignup);
+app.post("/login",routes.userLogin);
 
 
 
