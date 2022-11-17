@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
 
 const jwtSecretKey = process.env.jwtSecretKey;
-const loginCookieName = "logged"
+const loginCookieName = "logged";
+const userCookieName = "user"
 
 
 function giveUserLoginCookie(response,userID){
@@ -11,6 +12,11 @@ function giveUserLoginCookie(response,userID){
     response.cookie(loginCookieName, token, {
         httpOnly: true,
         sameSite:"strict",
+        maxAge: 60 * 60 * 24 * 1000 //1 day
+    });
+}
+function giveUserLoginInfoCookie(response,data){
+    response.cookie(userCookieName, data, {
         maxAge: 60 * 60 * 24 * 1000 //1 day
     });
 }
@@ -27,4 +33,4 @@ function verifyLoginCookie(request){
     }
 }
 
-module.exports = {giveUserLoginCookie,verifyLoginCookie};
+module.exports = {giveUserLoginCookie,verifyLoginCookie,giveUserLoginInfoCookie};

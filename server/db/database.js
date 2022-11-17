@@ -8,6 +8,17 @@ const db = client.db("social-media-app-database");
 
 const usersCollection = db.collection("users");
 
+/**
+ * this function gets a user from the database that matches the given email.
+ * 
+ * @param {string} email required.
+ * @param {Object} projection optionnal: choose which column in the database to get, will return everything if left empty.
+ * @returns database returned values OR {error}.
+ * 
+ * @example 
+ * email = "example@gmail.com"
+ * project = {username:1,password:0,description:1}
+ */
 async function getUserByEmail(email,projection={}){
     try {
         let output = await usersCollection.findOne({email},{projection});
@@ -18,10 +29,17 @@ async function getUserByEmail(email,projection={}){
     }
 }
 
-async function userLogin(email,password){
+/**
+ * this function hashes the password then compares it to the hash stored in the database.
+ * 
+ * @param {*} email required.
+ * @param {*} password required.
+ * @returns status code 
+ */
+async function userSignin(email,password){
     try {
         //get user data
-        let user = await getUserByEmail(email,{hashSalt:1,hashedPassword:1});
+        let user = await getUserByEmail(email,{hashSalt:1,hashedPassword:1,username:1});
         if (user === null){
             //user doesnt exists
             return {status:404};
@@ -34,13 +52,14 @@ async function userLogin(email,password){
         if (hashedPassword === unverifiedHashedPassword){
             //correct password
             let userID = user._id.toString();
-            return {status:200,userID};
+            let username = user.username;
+            return {status:200,userID,username};
         }
         //wrong password
         return {status:404};
 
     } catch (error) {
-        console.error("\x1b[31m" + "error from database > userLogin: \n" + "\x1b[0m" + error.message);
+        console.error("\x1b[31m" + "error from database > userSignin: \n" + "\x1b[0m" + error.message);
         return {status:500};
     }
 }
@@ -67,4 +86,4 @@ async function userSignup(username,email,hashedPassword,hashSalt){
     }
 }
 
-module.exports = {userSignup,userLogin};
+module.exports = {userSignup,userSignin};

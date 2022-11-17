@@ -13,12 +13,22 @@
 
     background-color: rgb(255, 255, 255);
     text-align: left;
-    width: 60vw;
+    width: 40vw;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .signForm {
         width: 100vw;
+    }
+}
+@media only screen and (max-height: 500px) {
+    .signForm {
+        position: revert;
+        top: revert;
+        left: revert;
+        -ms-transform: revert;
+        transform: revert;
+        width: revert;
     }
 }

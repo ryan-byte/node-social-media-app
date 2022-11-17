@@ -16,8 +16,13 @@ app.use(express.urlencoded({ extended: true }));
 
 //endpoints
 
+app.post("/test",(req,res)=>{
+    console.log(req.body);
+    res.sendStatus(200);
+})
+
 app.post("/signup",middleware.noLoggedUsersOnly,routes.userSignup);
-app.post("/login",middleware.noLoggedUsersOnly,routes.userLogin);
+app.post("/signin",middleware.noLoggedUsersOnly,routes.userSignin);
 
 
 

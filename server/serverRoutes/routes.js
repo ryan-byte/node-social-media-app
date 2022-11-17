@@ -3,7 +3,7 @@ const hashPassword = require("../utils/hashPassword");
 const cookieManager = require("../utils/cookieManager");
 
 
-async function userLogin(req,res){
+async function userSignin(req,res){
     //must be called after a middleware that verify if the user is not logged in
     //email and password must be sent from urlencoded form
     const {email,password} = req.body === undefined ? "" : req.body;
@@ -16,11 +16,12 @@ async function userLogin(req,res){
         return;
     }
     //check if the data is correct from the database
-    let {status,userID} = await database.userLogin(email,password);
+    let {status,userID,username} = await database.userSignin(email,password);
     
     if (status === 200){
         //give the user a cookie for login
         cookieManager.giveUserLoginCookie(res,userID);
+        cookieManager.giveUserLoginInfoCookie(res,{username,userID});
     }
     res.sendStatus(status);
 }
@@ -48,10 +49,11 @@ async function userSignup(req,res){
     if (status === 201){
         //give the user a cookie for login
         cookieManager.giveUserLoginCookie(res,userID);
+        cookieManager.giveUserLoginInfoCookie(res,{username,userID});
     }
     res.sendStatus(status);
 }
 
 
 
-module.exports = {userSignup,userLogin};
+module.exports = {userSignup,userSignin};

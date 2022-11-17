@@ -1,11 +1,79 @@
 import '../../assets/styles/signin.css'; 
 import { ReactComponent as GoBack } from  '../../assets/svg/goBack.svg'; 
-import {Link} from "react-router-dom";
+import {Link,useNavigate} from "react-router-dom";
+import { useState ,useEffect } from 'react';
+
+import Cookies from "js-cookie"
+import postData from '../../utils/postData';
+import ErrorOutput from '../../components/output/ErrorOutput';
+import TextInput from '../../components/form/TextInput';
+import PasswordInput from '../../components/form/PasswordInput';
+import EmailInput from '../../components/form/EmailInput';
+
+
+const userCookieName = "user"
+
 
 function Signup(){
+    const navigate = useNavigate();
+
+    const [username,setUsername] = useState("");
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [confirmPassword,setConfirmPassword] = useState("");
+
+    const [error,setError] = useState(undefined);
+
+    async function onSignup(ev){
+        ev.preventDefault();
+        let errorMessage = "";
+        //check if the inputs are correct
+        if (confirmPassword !== password){
+            errorMessage += "password and confirm password must be the same\n";
+        }
+        if (password.length <= 8){
+            errorMessage += "password length must be bigger then 8\n";
+        }
+        if (errorMessage === ""){
+            setError(undefined);
+        }else{
+            setError(errorMessage);
+            return;
+        }
+        //send an api request with useFetch
+        let data = {
+            username,
+            email,
+            password,
+        };
+        let response = await postData("/signup",data);
+        
+        //do something depending on the response
+        if (response.ok){
+            navigate("/");
+        }else{
+            let status = response.status;
+            if (status === 401){
+                errorMessage += `you are already logged in`;
+            }else if (status === 409){
+                errorMessage += `email already exists`;
+            }else{
+                errorMessage = `error status code: ${status}\n`;
+            }
+            setError(errorMessage);
+        }
+    }
+
+    useEffect(()=>{
+        let userCookieValue = Cookies.get(userCookieName);
+        if (userCookieValue){
+            navigate("/");
+        }
+    });
+
     return(
         <div className="signFormContainer bg-light">
-            <form className='p-3 signForm'>
+            <form className='p-3 signForm' onSubmit={onSignup}>
 
 
                 
@@ -21,22 +89,14 @@ function Signup(){
                 </div>
 
 
-                <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Full Name</label>
-                    <input required type="text" className="form-control" name="name" id="name"/>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email address</label>
-                    <input required type="email" className="form-control" name="email" id="email"/>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input required type="password" className="form-control" name = "password" id="password"/>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                    <input required type="password" className="form-control" name = "confirmPassword" id="confirmPassword"/>
-                </div>
+                <TextInput label={"Username"} attributs={"username"} value={username} setValue={setUsername} />
+                <EmailInput label={"Email"} attributs={"email"} value={email} setValue={setEmail} />
+                <PasswordInput label={"Password"} attributs={"password"} value={password} setValue={setPassword} />
+                <PasswordInput label={"Confirm Password"} attributs={"confirmPassword"} value={confirmPassword} setValue={setConfirmPassword} />
+
+                
+                <ErrorOutput message={error}/>
+
                 <button type="submit" className="btn btn-primary">Signup</button>
             </form>
         </div>
