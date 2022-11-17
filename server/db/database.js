@@ -30,11 +30,11 @@ async function getUserByEmail(email,projection={}){
 }
 
 /**
- * this function hashes the password then compares it to the hash stored in the database.
+ * Checks if the given user credentions are right by hashing the password then compares it to the hash stored in the database.
  * 
  * @param {*} email required.
  * @param {*} password required.
- * @returns status code 
+ * @returns status code (200,404,500)
  */
 async function userSignin(email,password){
     try {
@@ -64,6 +64,15 @@ async function userSignin(email,password){
     }
 }
 
+/**
+ * 
+ * 
+ * @param {string} username required.
+ * @param {string} email required.
+ * @param {string} hashedPassword required.
+ * @param {string} hashSalt required: salt used to hash the password.
+ * @returns status code (201,409,500)
+ */
 async function userSignup(username,email,hashedPassword,hashSalt){
     try {
         //check if the user exists already
