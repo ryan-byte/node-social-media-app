@@ -2,7 +2,13 @@ const database = require("../db/database");
 const hashPassword = require("../utils/hashPassword");
 const cookieManager = require("../utils/cookieManager");
 
-
+/**
+ * a route for verifying if the given user credentials are true, 
+ * if true then gives the client a login cookie.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns status code
+ */
 async function userSignin(req,res){
     //must be called after a middleware that verify if the user is not logged in
     //email and password must be sent from urlencoded form
@@ -26,6 +32,12 @@ async function userSignin(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * a route for adding a user to the database then gives the client a login cookie.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns status code
+ */
 async function userSignup(req,res){
     //must be called after a middleware that verify if the user is not logged in
     //username, email and password must be sent from urlencoded form

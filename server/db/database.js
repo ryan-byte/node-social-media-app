@@ -65,7 +65,7 @@ async function userSignin(email,password){
 }
 
 /**
- * 
+ * Add a user to the database.
  * 
  * @param {string} username required.
  * @param {string} email required.
