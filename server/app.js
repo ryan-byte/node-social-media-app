@@ -21,8 +21,8 @@ app.post("/test",(req,res)=>{
     res.sendStatus(200);
 })
 
-app.post("/signup",middleware.noLoggedUsersOnly,routes.userSignup);
-app.post("/signin",middleware.noLoggedUsersOnly,routes.userSignin);
+app.post("/signup",routes.userSignup);
+app.post("/signin",routes.userSignin);
 
 
 

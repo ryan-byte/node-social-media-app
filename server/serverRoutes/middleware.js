@@ -18,23 +18,6 @@ function loggedUsersAccess(req,res,next){
     }
 }
 
-/**
- * this middleware will only let the user access the next route if his jwt token is invalid or he doesnt have it,
- * if the jwt is valid then it will respond with 401 status code.
- * 
- * @param {Object} req required: request object.
- * @param {Object} res required: response object.
- * @param {Object} next required
- */
-function noLoggedUsersOnly(req,res,next){
-    let verifiedToken = cookieManager.verifyLoginCookie(req);
-    if (verifiedToken){
-        res.sendStatus(401);
-    }else{
-        next();
-    }
-}
 
 
-
-module.exports = {loggedUsersAccess,noLoggedUsersOnly};
+module.exports = {loggedUsersAccess};

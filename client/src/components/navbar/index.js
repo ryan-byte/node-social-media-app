@@ -1,7 +1,16 @@
 import {Link} from "react-router-dom";
+import Cookies from "js-cookie";
+import UserDropdown from "./userDropdown";
 
+const userCookieName = "user";
 
 function Navbar(){
+    let userCookieValue = Cookies.get(userCookieName);
+    let userInfo;
+    if (userCookieValue){
+        userInfo = JSON.parse(userCookieValue);
+    }
+    
     return (
         <nav className="navbar navbar-expand-lg bg-light sticky-top">
             <div className="container-fluid">
@@ -15,9 +24,12 @@ function Navbar(){
                         <Link className="nav-link active" aria-current="page" to="/">Home</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" to="/signin">Signin</Link>
+                        {userInfo === undefined && <Link className="nav-link active" aria-current="page" to="/signin">Signin</Link>}
                     </li>
                 </ul>
+                
+                {userInfo && <UserDropdown username={userInfo.username} />}
+
                 </div>
             </div>
         </nav>

@@ -2,16 +2,13 @@ import '../../assets/styles/signin.css';
 import { ReactComponent as GoBack } from  '../../assets/svg/goBack.svg'; 
 import {Link,useNavigate} from "react-router-dom";
 import { useState ,useEffect } from 'react';
+import {unloggedUsersAccess} from "../../utils/accessPage";
 
-import Cookies from "js-cookie"
 import postData from '../../utils/postData';
 import ErrorOutput from '../../components/output/ErrorOutput';
 import PasswordInput from '../../components/form/PasswordInput';
 import EmailInput from '../../components/form/EmailInput';
-
-
-
-const userCookieName = "user"
+import Loading from '../../components/feedback/Loading';
 
 
 function Signin(){
@@ -21,11 +18,14 @@ function Signin(){
     const [password,setPassword] = useState("");
 
     const [error,setError] = useState(undefined);
+    const [loading,setLoading] = useState(false);
 
 
     async function onSignin(ev){
         ev.preventDefault();
         let errorMessage = "";
+        //start loading feedback
+        setLoading(true);
         //check if the inputs are correct
         if (password.length <= 8){
             errorMessage += "password length must be bigger then 8\n";
@@ -34,9 +34,11 @@ function Signin(){
             setError(undefined);
         }else{
             setError(errorMessage);
+            //end loading feedback
+            setLoading(false);
             return;
         }
-        //send an api request with useFetch
+        //send an api request
         let data = {
             email,
             password,
@@ -48,19 +50,19 @@ function Signin(){
             navigate("/");
         }else{
             let status = response.status;
-            errorMessage = `error status code: ${status}\n`;
-            if (status === 401){
-                errorMessage += `you are already logged in`;
+            if (status === 404){
+                errorMessage = `User not found`;
+            }else{
+                errorMessage = `error status code: ${status}\n`;
             }
             setError(errorMessage);
         }
+        //end loading feedback
+        setLoading(false);
     }
 
     useEffect(()=>{
-        let userCookieValue = Cookies.get(userCookieName);
-        if (userCookieValue){
-            navigate("/");
-        }
+        unloggedUsersAccess(navigate);
     });
 
 
@@ -84,6 +86,7 @@ function Signin(){
                 <EmailInput label={"Email"} attributs={"email"} value={email} setValue={setEmail} />
                 <PasswordInput label={"Password"} attributs={"password"} value={password} setValue={setPassword} />
 
+                {loading && <Loading />}
                 <ErrorOutput message={error}/>
 
 

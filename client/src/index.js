@@ -5,7 +5,7 @@ import 'bootstrap/dist/js/bootstrap.js';
 import './assets/styles/index.css'; 
 import {BrowserRouter,Routes,Route} from "react-router-dom";
 
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 import NotFound from './pages/notFound';
 import Home from './pages/home';
 import Signin from './pages/signin';

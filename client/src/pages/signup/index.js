@@ -2,16 +2,14 @@ import '../../assets/styles/signin.css';
 import { ReactComponent as GoBack } from  '../../assets/svg/goBack.svg'; 
 import {Link,useNavigate} from "react-router-dom";
 import { useState ,useEffect } from 'react';
+import {unloggedUsersAccess} from "../../utils/accessPage";
 
-import Cookies from "js-cookie"
 import postData from '../../utils/postData';
 import ErrorOutput from '../../components/output/ErrorOutput';
 import TextInput from '../../components/form/TextInput';
 import PasswordInput from '../../components/form/PasswordInput';
 import EmailInput from '../../components/form/EmailInput';
-
-
-const userCookieName = "user"
+import Loading from '../../components/feedback/Loading';
 
 
 function Signup(){
@@ -23,10 +21,13 @@ function Signup(){
     const [confirmPassword,setConfirmPassword] = useState("");
 
     const [error,setError] = useState(undefined);
+    const [loading,setLoading] = useState(false);
 
     async function onSignup(ev){
         ev.preventDefault();
         let errorMessage = "";
+        //start loading feedback
+        setLoading(true);
         //check if the inputs are correct
         if (confirmPassword !== password){
             errorMessage += "password and confirm password must be the same\n";
@@ -38,6 +39,8 @@ function Signup(){
             setError(undefined);
         }else{
             setError(errorMessage);
+            //end loading feedback
+            setLoading(false);
             return;
         }
         //send an api request with useFetch
@@ -53,29 +56,25 @@ function Signup(){
             navigate("/");
         }else{
             let status = response.status;
-            if (status === 401){
-                errorMessage += `you are already logged in`;
-            }else if (status === 409){
-                errorMessage += `email already exists`;
+            if (status === 409){
+                errorMessage = `email already exists`;
             }else{
                 errorMessage = `error status code: ${status}\n`;
             }
             setError(errorMessage);
         }
+
+        //end loading feedback
+        setLoading(false);
     }
 
     useEffect(()=>{
-        let userCookieValue = Cookies.get(userCookieName);
-        if (userCookieValue){
-            navigate("/");
-        }
+        unloggedUsersAccess(navigate);
     });
 
     return(
         <div className="signFormContainer bg-light">
             <form className='p-3 signForm' onSubmit={onSignup}>
-
-
                 
                 <div className="d-flex">
                     
@@ -94,7 +93,7 @@ function Signup(){
                 <PasswordInput label={"Password"} attributs={"password"} value={password} setValue={setPassword} />
                 <PasswordInput label={"Confirm Password"} attributs={"confirmPassword"} value={confirmPassword} setValue={setConfirmPassword} />
 
-                
+                {loading && <Loading />}
                 <ErrorOutput message={error}/>
 
                 <button type="submit" className="btn btn-primary">Signup</button>

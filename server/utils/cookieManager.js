@@ -29,6 +29,7 @@ function giveUserLoginCookie(response,userID){
  * @param {*} data 
  */
 function giveUserLoginInfoCookie(response,data){
+    data = JSON.stringify(data);
     response.cookie(userCookieName, data, {
         maxAge: 60 * 60 * 24 * 1000 //1 day
     });
