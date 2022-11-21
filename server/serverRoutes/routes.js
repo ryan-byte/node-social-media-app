@@ -66,6 +66,11 @@ async function userSignup(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * removes the cookies used for authentication
+ * @param {*} req 
+ * @param {*} res 
+ */
 function logout(req,res){
     cookieManager.removeLoginCookie(res);
     res.sendStatus(200);

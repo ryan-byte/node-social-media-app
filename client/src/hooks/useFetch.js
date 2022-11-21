@@ -15,14 +15,26 @@ export default function useFetch(url){
         async function getUserDetails(){
             setLoading(true);
             try{
+                setError(undefined);
                 let request = await fetch(url,{
                     method: "GET"
                 })
-                let jsonData = await request.json();
-                setData(jsonData)
+                if (request.ok){
+                    let jsonData = await request.json();
+                    setData(jsonData)
+                }else{
+                    throw new Error(request.status);
+                }
             }catch (err){
-                setError("error has occured");
-                console.error(err.message);
+                if (err.message === "404"){
+                    setError("Not Found");
+                }else if (err.message === "400"){
+                    setError("Bad Request");
+                }
+                else{
+                    setError("error has occured");
+                    console.error(err.message);
+                }
             }
             setLoading(false);
         };

@@ -1,13 +1,18 @@
+const database = require("../db/database");
 
 /**
  * get the user profile data from a given id. 
  */
-function getUserProfileData(req,res){
+async function getUserProfileData(req,res){
     const {id} = req.params;
     //get the profile data from the database
-    let fakeData = {username:"lou",details:"bio..."}
+    let data = await database.getUserProfileById(id);
     //send the data to the user
-    res.send(fakeData);
+    if (data.status){
+        res.sendStatus(data.status);
+    }else{
+        res.status(200).send(data);        
+    }
 }
 
 

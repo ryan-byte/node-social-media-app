@@ -1,4 +1,5 @@
 const {MongoClient,ObjectId} = require("mongodb");
+const {BSONTypeError} = require("bson");
 const hashPassword = require("../utils/hashPassword");
 
 
@@ -26,6 +27,24 @@ async function getUserByEmail(email,projection={}){
     } catch (error) {
         console.error("\x1b[31m" + "error from database > getUserByEmail: \n"+ "\x1b[0m" + error.message);
         return {error};
+    }
+}
+/**
+ * gets the profile that much a specific user id.
+ * @param {String} id
+ * @return  status code OR object that contains username and details
+ */
+async function getUserProfileById(id){
+    try {
+        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{_id:0,username:1,details:1}});
+        if (output === null) return {status:404};
+        return output;
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > getUserProfileById: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
     }
 }
 
@@ -80,8 +99,9 @@ async function userSignup(username,email,hashedPassword,hashSalt){
         if (userExist === null){
             //user doesnt exist
             //save his data
+            let details = {aboutMe:""};
             let timeStamp = Math.floor(Date.now() / 1000);
-            let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,timeStamp})).insertedId.toString();
+            let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,details,timeStamp})).insertedId.toString();
             return {status:201,userID};
         }else{
             //throw an error if the get user has thrown an error
@@ -95,4 +115,4 @@ async function userSignup(username,email,hashedPassword,hashSalt){
     }
 }
 
-module.exports = {userSignup,userSignin};
+module.exports = {userSignup,userSignin,getUserProfileById};

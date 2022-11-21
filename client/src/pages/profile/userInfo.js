@@ -1,13 +1,12 @@
 
 export default function UserInfo({userInfoData}){
-    console.log(userInfoData);
     const username = userInfoData.username;
-    const details = userInfoData.details;
+    const aboutMe = userInfoData.details ? userInfoData.details.aboutMe : "";
     return(
         <div>
             username:{username}
             <br />
-            details:{details}
+            aboutMe:{aboutMe}
         </div>
     )
 }
