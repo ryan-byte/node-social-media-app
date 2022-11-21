@@ -1,8 +1,12 @@
+import { removeLoginCookies } from "../../utils/accessPage";
+
 
 function userDropdown({username}){
 
-    function onLogout(ev){
+    async function onLogout(ev){
         ev.preventDefault();
+        await removeLoginCookies();
+        window.location.replace("/");
     }
 
     return(
@@ -11,7 +15,8 @@ function userDropdown({username}){
                 {username}
             </button>
             <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li><span className="dropdown-item">profile</span></li>
+                <li><span className="dropdown-item">Profile</span></li>
+                <li><span className="dropdown-item">Settings</span></li>
                 <li><hr className="dropdown-divider" /></li>
                 <li>
                     <form onSubmit={onLogout}>

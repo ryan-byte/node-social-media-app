@@ -24,6 +24,8 @@ app.post("/test",(req,res)=>{
 app.post("/signup",routes.userSignup);
 app.post("/signin",routes.userSignin);
 
+app.get("/logout",routes.logout);
+
 
 
 

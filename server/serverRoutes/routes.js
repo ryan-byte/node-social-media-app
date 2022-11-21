@@ -66,6 +66,9 @@ async function userSignup(req,res){
     res.sendStatus(status);
 }
 
+function logout(req,res){
+    cookieManager.removeLoginCookie(res);
+    res.sendStatus(200);
+}
 
-
-module.exports = {userSignup,userSignin};
+module.exports = {userSignup,userSignin,logout};

@@ -53,4 +53,8 @@ function verifyLoginCookie(request){
     }
 }
 
-module.exports = {giveUserLoginCookie,verifyLoginCookie,giveUserLoginInfoCookie};
+function removeLoginCookie(response){
+    response.clearCookie(loginCookieName);
+}
+
+module.exports = {giveUserLoginCookie,verifyLoginCookie,giveUserLoginInfoCookie,removeLoginCookie};
