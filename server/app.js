@@ -14,8 +14,10 @@ const PORT = parseInt(process.env.PORT) || 5000;
 
 app.use(express.urlencoded({ extended: true }));
 
-//endpoints
+//api endpoints
+app.get("/api/user/profile/:id",apiRoutes.getUserProfileData);
 
+//route endpoints
 app.post("/test",(req,res)=>{
     console.log(req.body);
     res.sendStatus(200);

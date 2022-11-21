@@ -1,7 +1,8 @@
+import {Link} from "react-router-dom";
 import { removeLoginCookies } from "../../utils/accessPage";
 
 
-function userDropdown({username}){
+function userDropdown({username,userID}){
 
     async function onLogout(ev){
         ev.preventDefault();
@@ -15,7 +16,7 @@ function userDropdown({username}){
                 {username}
             </button>
             <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li><span className="dropdown-item">Profile</span></li>
+                <li><Link className="dropdown-item" to={"/profile/"+userID} >Profile</Link></li>
                 <li><span className="dropdown-item">Settings</span></li>
                 <li><hr className="dropdown-divider" /></li>
                 <li>
