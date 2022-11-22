@@ -16,7 +16,7 @@
  * 
  */
 
-export default async function postData(url,data={}){
+export default async function postData(url,data={},method = "POST"){
     var formBody = [];
     for (var property in data) {
         var encodedKey = encodeURIComponent(property);
@@ -26,7 +26,7 @@ export default async function postData(url,data={}){
     formBody = formBody.join("&");
 
     let request = await fetch(url,{
-        method: "POST",
+        method,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },

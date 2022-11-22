@@ -20,7 +20,7 @@ async function getUserProfileData(req,res){
  * update the user profile details, must pass the updated details in the body as x-www-form-urlencoded.
  */
 async function updateUserProfileDetails(req,res){
-    //must be called after the jwt verification middleware which should send the userData stored in the 
+    //must be called after the jwt verification middleware which should send the userID stored in the 
     //cookie 
     let userID = res.locals.userID;
     let {aboutMe} = req.body;

@@ -36,7 +36,7 @@ async function getUserByEmail(email,projection={}){
  */
 async function getUserProfileById(id){
     try {
-        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{_id:0,username:1,details:1}});
+        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{_id:1,username:1,details:1}});
         if (output === null) return {status:404};
         return output;
     } catch (error) {
@@ -130,8 +130,7 @@ async function updateProfileDetails(userID,aboutMe){
                 "details.aboutMe":aboutMe
             },
         };
-        const result = await usersCollection.updateOne(filter,updateDoc);
-        console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,);
+        await usersCollection.updateOne(filter,updateDoc);
         return {status:200};
     } catch (error) {
         if(error instanceof BSONTypeError){

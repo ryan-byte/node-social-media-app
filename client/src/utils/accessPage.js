@@ -26,7 +26,7 @@ function unloggedUsersAccess(navigate){
  * });
  */
 function loggedUsersAccess(navigate){
-
+    //must add
 }
 /**
  * Removes the cookies used for authentication.
@@ -37,5 +37,11 @@ async function removeLoginCookies(){
     //remove the cookie that is used by the server
     await fetch("/logout");
 }
+function getLoginCookieData(){
+    let userCookieValue = Cookies.get(userCookieName);
+    return JSON.parse(userCookieValue);
+}
 
-export {loggedUsersAccess,unloggedUsersAccess,removeLoginCookies};
+
+
+export {loggedUsersAccess,unloggedUsersAccess,removeLoginCookies,getLoginCookieData};
