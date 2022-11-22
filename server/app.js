@@ -7,7 +7,6 @@ const express = require("express");
 const routes = require("./serverRoutes/routes");
 const middleware = require("./serverRoutes/middleware");
 const apiRoutes = require("./api/apiRoutes");
-const apiMiddleware = require("./api/apiMiddleware");
 
 const app = express();
 const PORT = parseInt(process.env.PORT) || 5000;
@@ -16,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //api endpoints
 app.get("/api/user/profile/:id",apiRoutes.getUserProfileData);
+app.put("/api/user/profile",middleware.loggedUsersAccess,apiRoutes.updateUserProfileDetails);
 
 //route endpoints
 app.post("/test",(req,res)=>{

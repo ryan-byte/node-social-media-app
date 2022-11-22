@@ -76,4 +76,5 @@ function logout(req,res){
     res.sendStatus(200);
 }
 
+
 module.exports = {userSignup,userSignin,logout};

@@ -10,8 +10,9 @@ const cookieManager = require("../utils/cookieManager");
  * @param {Object} next required
  */
 function loggedUsersAccess(req,res,next){
-    let verifiedToken = cookieManager.verifyLoginCookie(req);
-    if (verifiedToken){
+    let userVerifiedData = cookieManager.verifyLoginCookie(req);
+    if (userVerifiedData){
+        res.locals.userID = userVerifiedData.userID;
         next();
     }else{
         res.sendStatus(401);

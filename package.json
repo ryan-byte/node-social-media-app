@@ -8,7 +8,8 @@
     "server": "npm start --prefix server",
     "server-dev": "npm run dev --prefix server",
     "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
-    "install-modules": "concurrently \"npm ci\" \"npm ci --prefix client\" \"npm ci --prefix server\""
+    "install-modules": "concurrently \"npm ci\" \"npm ci --prefix client\" \"npm ci --prefix server\"",
+    "outdated-modules": "npm outdated && npm outdated --prefix client && npm outdated --prefix server"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,6 @@
   },
   "homepage": "https://github.com/ryan-byte/node-social-media-app#readme",
   "dependencies": {
-    "concurrently": "^7.5.0"
+    "concurrently": "^7.6.0"
   }
 }

@@ -115,4 +115,31 @@ async function userSignup(username,email,hashedPassword,hashSalt){
     }
 }
 
-module.exports = {userSignup,userSignin,getUserProfileById};
+/**
+ * updates the Details object saved with the given userID.
+ * @param {String} userID 
+ * @param {String} aboutMe
+ * @returns status code (200/400/502)
+ */
+async function updateProfileDetails(userID,aboutMe){
+    try {
+        let _id = new ObjectId(userID);
+        const filter = { _id };
+        const updateDoc = {
+            $set: {
+                "details.aboutMe":aboutMe
+            },
+        };
+        const result = await usersCollection.updateOne(filter,updateDoc);
+        console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,);
+        return {status:200};
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > updateProfileDetails: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
+module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails};
