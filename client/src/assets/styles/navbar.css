@@ -1,0 +1,31 @@
+@import url("./colorScheme.css");
+
+
+.navbar-bg{
+    background-color: var(--color-Background);
+}
+
+.navbar-brand, .navbar-brand:hover{
+    color: var(--color-background-text);
+}
+
+.nav-item{
+    color: var(--color-background-text);
+}
+.nav-link, .nav-link:hover{
+    color: var(--color-background-text);
+}
+.navbar-nav .show > .nav-link, .navbar-nav .nav-link.active{
+    color: var(--color-active-link);
+}
+
+.navbar-profile-pic{
+    width: 30px;
+    height: 30px;
+    border-radius: 25px;
+
+}
+
+.dropdown-toggle::after {
+    content: none;
+}

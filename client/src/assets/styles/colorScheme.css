@@ -1,0 +1,12 @@
+:root {
+    --color-Background: #1A1A1D;
+    --color-background-text: #C3073F;
+    --color-post-background: #6F2232;
+    --color-post-outer-text: #000000;
+    --color-post-inner-text: #FFFFFF;
+    --color-input-background: #4E4E50;
+    --color-input-text: #FFFFFF;
+    
+
+    --color-active-link: #950740;
+}
