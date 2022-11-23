@@ -1,6 +1,10 @@
 @import url("./colorScheme.css");
 
 
+.navbar{
+    font-family: 'Times New Roman', 'Georgia', 'Brush Script MT';
+}
+
 .navbar-bg{
     background-color: var(--color-Background);
 }

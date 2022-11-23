@@ -39,7 +39,11 @@ async function removeLoginCookies(){
 }
 function getLoginCookieData(){
     let userCookieValue = Cookies.get(userCookieName);
-    return JSON.parse(userCookieValue);
+    if (userCookieValue){
+        return JSON.parse(userCookieValue);
+    }else{
+        return {};
+    }
 }
 
 

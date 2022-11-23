@@ -1,9 +1,14 @@
+import "../../assets/styles/profile.css"
+
 import {useParams} from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 
 import UserInfo from "./userInfo";
 import Loading from "../../components/feedback/Loading";
 import ErrorOutput from "../../components/output/ErrorOutput";
+import UserImages from "./userImages";
+import UserContent from "./userContent";
+
 
 export default function Profile(){
     const {id} = useParams();
@@ -13,9 +18,11 @@ export default function Profile(){
 
     return (
         <div>
+            {userInfoData && <UserImages userInfoData={userInfoData}/>}
             {loading && <Loading />}
-            {userInfoData && <UserInfo userInfoData={userInfoData} />}
             {error && <ErrorOutput message={error}/>}
+            {userInfoData && <UserInfo userInfoData={userInfoData} />}
+            <UserContent />
         </div>
     )
 }

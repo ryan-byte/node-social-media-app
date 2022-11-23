@@ -37,7 +37,7 @@ function Navbar(){
                     </li>
                 </ul>
                 
-                {userInfo && <UserDropdown username={userInfo.username} userID={userInfo.userID} />}
+                {userInfo && <UserDropdown userID={userInfo.userID} />}
 
                 </div>
             </div>

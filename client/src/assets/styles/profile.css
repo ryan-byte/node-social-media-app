@@ -1,0 +1,48 @@
+.background-img{
+    width: 100%;
+    height: 180px;
+    background-color: var(--color-empty-background-profile);
+    color: black;
+    position: relative;
+}
+.background-img p{
+    font-family: 'Georgia', 'Brush Script MT' ,'Segoe UI';
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pofile-img-container{
+    height: 150px;
+    width: 100%;
+    position: relative;
+}
+.profile-img{
+    position: absolute;
+    left: 0; 
+    right: 0; 
+    bottom: 10px;
+    margin-left: auto; 
+    margin-right: auto; 
+    height: 200px;
+    width: 200px;
+    border-radius: 500px;
+}
+
+.pofile-aboutMe-Container{
+    width: 100%;
+    height: 100px;
+    position: relative;
+
+}
+.profile-aboutMe{
+    background-color: transparent;
+    overflow: hidden;
+    width: 300px;
+    text-align: center;
+    border: none;
+    resize: none;
+    color: inherit;
+}
