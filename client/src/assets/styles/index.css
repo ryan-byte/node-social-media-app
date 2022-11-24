@@ -21,3 +21,8 @@ code {
   min-height: 80vh;
 }
 
+.user-post-profile-image{
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+}

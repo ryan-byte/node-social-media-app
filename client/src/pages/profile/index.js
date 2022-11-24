@@ -8,6 +8,7 @@ import Loading from "../../components/feedback/Loading";
 import ErrorOutput from "../../components/output/ErrorOutput";
 import UserImages from "./userImages";
 import UserContent from "./userContent";
+import UserPublish from "./userPublish";
 
 
 export default function Profile(){
@@ -22,6 +23,7 @@ export default function Profile(){
             {loading && <Loading />}
             {error && <ErrorOutput message={error}/>}
             {userInfoData && <UserInfo userInfoData={userInfoData} />}
+            <UserPublish />
             <UserContent />
         </div>
     )

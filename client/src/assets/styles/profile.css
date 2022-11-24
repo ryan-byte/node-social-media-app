@@ -15,7 +15,7 @@
 }
 
 .pofile-img-container{
-    height: 150px;
+    height: 100px;
     width: 100%;
     position: relative;
 }
@@ -26,8 +26,8 @@
     bottom: 10px;
     margin-left: auto; 
     margin-right: auto; 
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     border-radius: 500px;
 }
 
@@ -45,4 +45,42 @@
     border: none;
     resize: none;
     color: inherit;
+}
+
+.user-publish-container{
+    width: 500px;
+    height: 80px;
+    background-color: var(--color-post-background);
+    border-radius: 10px;
+    margin: auto;
+    position: relative;
+}
+.user-publish-form{
+    padding: 0 10px;
+    margin: 0;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-family: 'Georgia', 'Brush Script MT' ,'Segoe UI';
+}
+.user-publish-form-text{
+    height: 40px;
+    margin: 0 20px;
+    background-color: var(--color-input-background);
+    border: none;
+    color: white;
+    padding-left: 5px;
+    width: 300px;
+}
+.user-publish-form-text::placeholder{
+    color: white;
+}
+.user-publish-form-submit{
+    color: var(--color-background-text);
+    background-color: var(--color-Background);
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
 }
