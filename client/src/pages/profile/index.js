@@ -1,4 +1,5 @@
 import "../../assets/styles/profile.css"
+import "../../assets/styles/posts.css"
 
 import {useParams} from "react-router-dom";
 import useFetch from "../../hooks/useFetch";

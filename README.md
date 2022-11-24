@@ -7,3 +7,6 @@ jwtSecretKey = "<secret string>"
 PORT = <integer>
 mongodbURL = "<mongodb connect url>"
 ```
+
+### pages color palette:
+- Located at /client/src/assets/styles/colorScheme.css

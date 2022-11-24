@@ -1,0 +1,28 @@
+.all-posts-holder{
+    width: 500px;
+    background-color: var(--color-post-background);
+    margin: 40px auto auto auto;
+    border-radius: 10px;
+    position: relative;
+}
+
+.user-post-container{
+    width: 500px;
+    min-height: 80px;
+    color: var(--color-post-outer-text);
+}
+
+.user-post-content{
+    color: var(--color-post-inner-text);
+}
+
+.post-interaction-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    padding: 0 10px;
+}
+.post-interaction-item{
+    height: 40px;
+    width: 40px;
+}

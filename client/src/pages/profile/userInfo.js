@@ -23,10 +23,11 @@ export default function UserInfo({userInfoData}){
     async function editAboutMe(ev){
         if (ev.key === 'Enter') {
             ev.preventDefault();
+            setError(undefined);
             let data = {aboutMe};
             let request = await postData("/api/user/profile",data,"PUT");
             if (!request.ok){
-                setError("Error status code: "+request.status);
+                setError("an error occured!");
             }
             document.activeElement.blur();
         }
@@ -37,10 +38,15 @@ export default function UserInfo({userInfoData}){
             <div>
                 {
                     ownerProfileVisited ?
-                    <form onKeyDown={editAboutMe} className="text-center pofile-aboutMe-Container">
-                        {error && <ErrorOutput message = {error}/>}
-                        <textarea className="form-control profile-aboutMe position-absolute top-50 start-50 translate-middle" onChange={(ev)=>{setAboutMe(ev.target.value);}} maxLength="70" value={aboutMe} rows="3"></textarea>
-                    </form> :
+                    <div>
+                        <div className="d-flex justify-content-center"> 
+                            {error && <ErrorOutput message = {error}/>}
+                        </div>
+                        <form onKeyDown={editAboutMe} className="text-center pofile-aboutMe-Container">
+                            <textarea className="form-control profile-aboutMe position-absolute top-50 start-50 translate-middle" onChange={(ev)=>{setAboutMe(ev.target.value);}} maxLength="70" value={aboutMe} rows="3"></textarea>
+                        </form>
+                    </div>
+                     :
                     <div className="pofile-aboutMe-Container">
                         <p className="profile-aboutMe position-absolute top-50 start-50 translate-middle">
                             {aboutMe}

@@ -25,8 +25,14 @@ async function updateUserProfileDetails(req,res){
     let userID = res.locals.userID;
     let {aboutMe} = req.body;
     let badParams = aboutMe == undefined ||
-                    aboutMe === "";
+                    aboutMe === ""||
+                    typeof aboutMe !== "string";
     if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    //check the length of the aboutMe if it is accepted
+    if (aboutMe.length > 70){
         res.sendStatus(400);
         return;
     }
