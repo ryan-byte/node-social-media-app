@@ -17,6 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/api/user/profile/:id",apiRoutes.getUserProfileData);
 app.put("/api/user/profile",middleware.loggedUsersAccess,apiRoutes.updateUserProfileDetails);
 
+app.post("/api/user/post",middleware.loggedUsersAccess,apiRoutes.createUserPost);
+
+
 //route endpoints
 app.post("/test",(req,res)=>{
     console.log(req.body);

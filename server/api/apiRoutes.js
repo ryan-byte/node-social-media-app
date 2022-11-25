@@ -15,10 +15,11 @@ async function getUserProfileData(req,res){
     }
 }
 
-
 /**
  * update the user profile details, must pass the updated details in the body as x-www-form-urlencoded.
- */
+ * 
+ *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+*/
 async function updateUserProfileDetails(req,res){
     //must be called after the jwt verification middleware which should send the userID stored in the 
     //cookie 
@@ -42,6 +43,34 @@ async function updateUserProfileDetails(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * create a user post in the database then returns a status code.
+ * 
+ *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+*/
+async function createUserPost(req,res){
+    //must be called after the jwt verification middleware which should send the userID stored in the 
+    //cookie 
+    let userID = res.locals.userID;
+    let {text} = req.body;
+    let badParams = text == undefined ||
+                    text === ""||
+                    typeof text !== "string";
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    if (text.length > 500){
+        res.sendStatus(400);
+        return;
+    }
+    //update the data in the database
+    let {status} = await database.createPost(userID,text);
+    //send back a status code
+    res.sendStatus(status);
+}
 
 
-module.exports = {getUserProfileData,updateUserProfileDetails};
+
+module.exports = {getUserProfileData,updateUserProfileDetails,
+                createUserPost};

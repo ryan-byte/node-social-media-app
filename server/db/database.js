@@ -8,6 +8,7 @@ const client = new MongoClient(mongodbURL);
 const db = client.db("social-media-app-database");
 
 const usersCollection = db.collection("users");
+const postsCollection = db.collection("posts");
 
 /**
  * this function gets a user from the database that matches the given email.
@@ -141,4 +142,25 @@ async function updateProfileDetails(userID,aboutMe){
     }
 }
 
-module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails};
+/**
+ * create a new posts that will be saved with a userID.
+ * @param {String} userID 
+ * @param {String} text 
+ * @returns status code (201/400/502)
+ */
+async function createPost(userID,text){
+    try {
+        let _id = new ObjectId(userID);
+        await postsCollection.insertOne({text,userID:_id});
+        return {status:201}
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > createPost: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
+module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
+                createPost};
