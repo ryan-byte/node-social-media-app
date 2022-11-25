@@ -70,7 +70,30 @@ async function createUserPost(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * get all the posts of a user then return json and a status code
+*/
+async function getUserPosts(req,res){
+    //get the userID from the requested param
+    let {userID} = req.params;
+    let badParams = userID == undefined ||
+                    userID === ""||
+                    typeof userID !== "string";
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    //update the data in the database
+    let {status,output} = await database.getPosts(userID);
+    //send back a status code
+    if (status === 200){
+        res.status(status).json(output);
+        return;
+    }
+    res.sendStatus(status);
+}
+
 
 
 module.exports = {getUserProfileData,updateUserProfileDetails,
-                createUserPost};
+                createUserPost,getUserPosts};

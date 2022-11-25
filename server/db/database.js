@@ -148,10 +148,10 @@ async function updateProfileDetails(userID,aboutMe){
  * @param {String} text 
  * @returns status code (201/400/502)
  */
-async function createPost(userID,text){
+ async function createPost(userID,text){
     try {
-        let _id = new ObjectId(userID);
-        await postsCollection.insertOne({text,userID:_id});
+        let timeStamp = Math.floor(Date.now() / 1000);
+        await postsCollection.insertOne({text,userID,timeStamp});
         return {status:201}
     } catch (error) {
         if(error instanceof BSONTypeError){
@@ -162,5 +162,24 @@ async function createPost(userID,text){
     }
 }
 
+/**
+ * get all the posts of a specific user
+ * @param {String} userID 
+ * @param {String} text 
+ * @returns status code (201/400/502)
+ */
+ async function getPosts(userID){
+    try {
+        let output = await postsCollection.find({userID}).project({_id:0}).sort({ timeStamp: -1}).toArray();
+        return {status:200,output};
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > createPost: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
 module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
-                createPost};
+                createPost,getPosts};

@@ -19,6 +19,8 @@ app.put("/api/user/profile",middleware.loggedUsersAccess,apiRoutes.updateUserPro
 
 app.post("/api/user/post",middleware.loggedUsersAccess,apiRoutes.createUserPost);
 
+app.get("/api/posts/:userID",apiRoutes.getUserPosts);
+
 
 //route endpoints
 app.post("/test",(req,res)=>{
