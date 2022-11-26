@@ -170,7 +170,7 @@ async function updateProfileDetails(userID,aboutMe){
  */
  async function getPosts(userID){
     try {
-        let output = await postsCollection.find({userID}).project({_id:0}).sort({ timeStamp: -1}).toArray();
+        let output = await postsCollection.find({userID}).sort({ timeStamp: -1}).toArray();
         return {status:200,output};
     } catch (error) {
         if(error instanceof BSONTypeError){

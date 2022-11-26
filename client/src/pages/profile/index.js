@@ -25,7 +25,7 @@ export default function Profile(){
             {error && <ErrorOutput message={error}/>}
             {userInfoData && <UserInfo userInfoData={userInfoData} />}
             <UserPublish />
-            <UserContent />
+            {userInfoData && <UserContent userInfoData={userInfoData}/>}
         </div>
     )
 }

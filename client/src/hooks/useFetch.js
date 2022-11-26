@@ -12,7 +12,8 @@ export default function useFetch(url){
     const [error,setError] = useState(undefined);
 
     useEffect(()=>{
-        async function getUserDetails(){
+        async function getData(){
+            setData(undefined);
             setLoading(true);
             try{
                 setError(undefined);
@@ -38,7 +39,7 @@ export default function useFetch(url){
             }
             setLoading(false);
         };
-        getUserDetails();
+        getData();
     },[url]);
 
     return {data,loading,error};
