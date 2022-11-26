@@ -8,11 +8,9 @@ import { ReactComponent as Like } from  '../../assets/svg/like.svg';
 import { ReactComponent as Comment } from  '../../assets/svg/comment.svg';
 import { ReactComponent as Share } from  '../../assets/svg/share.svg';
 
-export default function UserContent({userInfoData}){
+export default function UserContent({userInfoData,visitedProfileID}){
     //get the user data
     const username = userInfoData.username;
-    //get the visited user id
-    const visitedProfileID = userInfoData._id;
     //get all the user posts
     const {data:userPosts,error,loading} = useFetch("/api/posts/" + visitedProfileID);
     

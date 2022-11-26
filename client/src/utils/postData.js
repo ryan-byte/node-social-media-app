@@ -1,5 +1,5 @@
 /**
- * Post data to a specific url.
+ * Post a urlencoded form data to a url.
  *
  * @param {string} url  the specific url to post data to
  * @param {Object} data the data that will be posted to the url 

@@ -21,7 +21,7 @@ npm start
 ```
 - Run project (with nodemon):
 ```
-npm run server-dev
+npm run dev
 ```
 
 

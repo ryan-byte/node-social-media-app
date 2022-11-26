@@ -3,6 +3,7 @@ import "../../assets/styles/posts.css"
 
 import {useParams} from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import { getLoginCookieData } from "../../utils/accessPage";
 
 import UserInfo from "./userInfo";
 import Loading from "../../components/feedback/Loading";
@@ -17,15 +18,18 @@ export default function Profile(){
     //make a request to the server with the id params to get user details
     const {data:userInfoData,error,loading} = useFetch("/api/user/profile/"+id);
     
+    //verify if the visited profile is the owner profile
+    const ownerID = getLoginCookieData().userID;
+    const ownerProfileVisited = ownerID === id;
 
     return (
         <div>
             {userInfoData && <UserImages userInfoData={userInfoData}/>}
             {loading && <Loading />}
             {error && <ErrorOutput message={error}/>}
-            {userInfoData && <UserInfo userInfoData={userInfoData} />}
-            <UserPublish />
-            {userInfoData && <UserContent userInfoData={userInfoData}/>}
+            {userInfoData && <UserInfo userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited} />}
+            {ownerProfileVisited && <UserPublish />}
+            {userInfoData && <UserContent userInfoData={userInfoData} visitedProfileID={id} />}
         </div>
     )
 }

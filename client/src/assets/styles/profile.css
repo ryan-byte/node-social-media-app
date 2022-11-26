@@ -55,6 +55,7 @@
     margin: auto;
     position: relative;
 }
+
 .user-publish-form{
     padding: 0 10px;
     margin: 0;
@@ -77,10 +78,14 @@
 .user-publish-form-text::placeholder{
     color: white;
 }
+
 .user-publish-form-submit{
     color: var(--color-background-text);
     background-color: var(--color-Background);
     border: none;
     border-radius: 10px;
     font-weight: bold;
+}
+.user-publish-form-submit:disabled{
+    opacity: 0.6;
 }

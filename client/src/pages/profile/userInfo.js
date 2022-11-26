@@ -1,14 +1,9 @@
 import {useState,useEffect} from "react";
 import postData from "../../utils/postData";
 import ErrorOutput from "../../components/output/ErrorOutput";
-import { getLoginCookieData } from "../../utils/accessPage";
 
 
-export default function UserInfo({userInfoData}){
-    //verify if the visited profile is the owner profile
-    const visitedProfileID = userInfoData._id;
-    const ownerID = getLoginCookieData().userID;
-    const ownerProfileVisited = ownerID === visitedProfileID;
+export default function UserInfo({userInfoData,ownerProfileVisited}){
 
     //setting up userData that will be shown
     const [aboutMe,setAboutMe] = useState("");
