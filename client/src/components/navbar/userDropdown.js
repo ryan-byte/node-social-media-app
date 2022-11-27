@@ -2,7 +2,6 @@ import {Link} from "react-router-dom";
 import { removeLoginCookies } from "../../utils/accessPage";
 import empty_profile from "../../assets/images/emptyProfile.png";
 
-
 function userDropdown({userID}){
 
     //prepare logout function
@@ -19,7 +18,11 @@ function userDropdown({userID}){
             </button>
             <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                 <li><Link className="dropdown-item" to={"/profile/"+userID} >Profile</Link></li>
-                <li><span className="dropdown-item">Settings</span></li>
+                <li>
+                    <Link className="dropdown-item" to={"/settings"}>
+                        <span> Settings</span>
+                    </Link>
+                </li>
                 <li><hr className="dropdown-divider" /></li>
                 <li>
                     <form onSubmit={onLogout}>

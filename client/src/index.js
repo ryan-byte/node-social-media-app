@@ -12,6 +12,7 @@ import Home from './pages/home';
 import Signin from './pages/signin';
 import Signup from './pages/signup';
 import Profile from './pages/profile';
+import Settings from './pages/settings';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -35,6 +36,7 @@ function MainLayoutRoutes() {
             <Routes>
               <Route exact path="/" element={<Home/>} />
               <Route exact path="/profile/:id" element={<Profile/>} />
+              <Route exact path="/settings" element={<Settings/>} />
               <Route path="*" element={<NotFound/>} />
             </Routes>
           </main>
