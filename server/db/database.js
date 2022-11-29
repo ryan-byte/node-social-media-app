@@ -163,6 +163,32 @@ async function updateProfileDetails(userID,aboutMe){
 }
 
 /**
+ * create a new posts that will be saved with a userID.
+ * @param {String} userID 
+ * @param {String} username 
+ * @returns status code (200/400/502)
+ */
+ async function updateUsername(userID,username){
+    try {
+        let _id = new ObjectId(userID);
+        const filter = { _id };
+        const updateDoc = {
+            $set: {
+                "username":username
+            },
+        };
+        let result = await usersCollection.updateOne(filter,updateDoc);
+        return {status:200,"modifiedCount":result.modifiedCount};
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > updateUsername: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
+/**
  * get all the posts of a specific user
  * @param {String} userID 
  * @param {String} text 
@@ -182,4 +208,4 @@ async function updateProfileDetails(userID,aboutMe){
 }
 
 module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
-                createPost,getPosts};
+                createPost,getPosts,updateUsername};

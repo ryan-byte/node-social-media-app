@@ -1,7 +1,10 @@
 const database = require("../db/database");
+const cookieManager = require("../utils/cookieManager");
 
 /**
  * get the user profile data from a given id. 
+ * @param {Required} req 
+ * @param {Required} res 
  */
 async function getUserProfileData(req,res){
     const {id} = req.params;
@@ -14,17 +17,20 @@ async function getUserProfileData(req,res){
         res.status(200).send(data);        
     }
 }
-
+1
 /**
  * update the user profile details, must pass the updated details in the body as x-www-form-urlencoded.
  * 
  *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ * @param {Required} req 
+ * @param {Required} res 
 */
 async function updateUserProfileDetails(req,res){
     //must be called after the jwt verification middleware which should send the userID stored in the 
     //cookie 
     let userID = res.locals.userID;
     let {aboutMe} = req.body;
+    if (aboutMe) aboutMe = aboutMe.trim();
     let badParams = aboutMe == undefined ||
                     aboutMe === ""||
                     typeof aboutMe !== "string";
@@ -47,12 +53,15 @@ async function updateUserProfileDetails(req,res){
  * create a user post in the database then returns a status code.
  * 
  *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ * @param {Required} req 
+ * @param {Required} res 
 */
 async function createUserPost(req,res){
     //must be called after the jwt verification middleware which should send the userID stored in the 
     //cookie 
     let userID = res.locals.userID;
     let {text} = req.body;
+    if (text) text = text.trim();
     let badParams = text == undefined ||
                     text === ""||
                     typeof text !== "string";
@@ -72,6 +81,8 @@ async function createUserPost(req,res){
 
 /**
  * get all the posts of a user then return json and a status code
+ * @param {Required} req 
+ * @param {Required} res 
 */
 async function getUserPosts(req,res){
     //get the userID from the requested param
@@ -93,7 +104,38 @@ async function getUserPosts(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * change the username of a user by getting his id from the stored cookie then update the username in the database.
+ * 
+ *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ * @param {Required} req 
+ * @param {Required} res 
+ */
+async function updateUsername(req,res){
+    //must be called after the jwt verification middleware which should send the userID stored in the 
+    //cookie 
+
+    let userID = res.locals.userID;
+    let {username} = req.body;
+    if (username) username = username.trim();
+
+    let badParams = username == undefined ||
+                    username === ""||
+                    typeof username !== "string";
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    //update the username in the database
+    let {status,modifiedCount} = await database.updateUsername(userID,username);
+    if (modifiedCount && modifiedCount !== 0){
+        //update the cookies
+        cookieManager.giveUserLoginInfoCookie(res,{username,userID});
+    }
+    res.sendStatus(status);
+}
+
 
 
 module.exports = {getUserProfileData,updateUserProfileDetails,
-                createUserPost,getUserPosts};
+                createUserPost,getUserPosts,updateUsername};
