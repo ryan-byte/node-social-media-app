@@ -2,11 +2,13 @@ import General from "./general_tab";
 import Security from "./security_tab";
 import {useEffect,useState} from "react";
 import {useSearchParams} from 'react-router-dom';
+import { getLoginCookieData } from "../../utils/accessPage";
 
 export default function Content(){
     const [searchParams,setSearchParams] = useSearchParams();
     const [tab,setTab] = useState(null);
 
+    const {username : usernameInCookie} = getLoginCookieData();
 
 
     useEffect(()=>{
@@ -20,8 +22,8 @@ export default function Content(){
     
     return (
         <div className="content">
-            {tab === "general" && <General/>}
-            {tab === "security" && <Security/>}
+            {tab === "general" && <General usernameInCookie={usernameInCookie} />}
+            {tab === "security" && <Security />}
         </div>
     );
 }
