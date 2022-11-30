@@ -85,6 +85,45 @@ async function userSignin(email,password){
 }
 
 /**
+ * verify if the given password of a specific user.
+ * 
+ * @param {String} userID 
+ * @param {String} password 
+ * @returns status code (200/403/404/500)
+ */
+async function verifyUserPassword(userID,password){
+    try {
+        //get user data
+        let filter ={
+           _id: new ObjectId(userID)
+        }
+        let projection = {
+            hashSalt:1,
+            hashedPassword:1
+        }
+        let user = await usersCollection.findOne(filter,{projection});
+        if (user === null){
+            //user doesnt exists
+            return {status:404};
+        }
+        //verify the given password
+        let hashSalt = user.hashSalt;
+        let hashedPassword = user.hashedPassword;
+        let unverifiedHashedPassword = hashPassword.hashPassword(password,hashSalt);
+
+        if (hashedPassword === unverifiedHashedPassword){
+            //correct password
+            return {status:200};
+        }
+        //wrong password
+        return {status:403};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > verifyUserPassword: \n" + "\x1b[0m" + error.message);
+        return {status:500};
+    }
+}
+
+/**
  * Add a user to the database.
  * 
  * @param {string} username required.
@@ -189,6 +228,34 @@ async function updateProfileDetails(userID,aboutMe){
 }
 
 /**
+ * 
+ * @param {String} userID 
+ * @param {String} hashedPassword 
+ * @param {String} hashSalt String used to hash a password into the given hashedPassword.
+ * @returns status code (200/400/500)
+ */
+async function updateUserPassword(userID,hashedPassword,hashSalt){
+    try {
+        //get user data
+        const filter = { _id: new ObjectId(userID) };
+        const updateDoc = {
+            $set: {
+                hashedPassword,
+                hashSalt
+            },
+        };
+        await usersCollection.updateOne(filter,updateDoc);
+        return {status:200};
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > updateUserPassword: \n" + "\x1b[0m" + error.message);
+        return {status:500};
+    }
+}
+
+/**
  * get all the posts of a specific user
  * @param {String} userID 
  * @param {String} text 
@@ -208,4 +275,4 @@ async function updateProfileDetails(userID,aboutMe){
 }
 
 module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
-                createPost,getPosts,updateUsername};
+                createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword};
