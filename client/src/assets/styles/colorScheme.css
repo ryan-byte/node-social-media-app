@@ -1,4 +1,8 @@
 :root {
+    --color-navbar-Background: #26262b; 
+    --color-navbar-input-Background: #414149; 
+    --color-navbar-input-front: #dbdbdb; 
+
     --color-Background: #1A1A1D;
     --color-background-text: #C3073F;
     --color-post-background: #6F2232;

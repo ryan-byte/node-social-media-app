@@ -1,4 +1,5 @@
 # Social Media App
+- Still in development.
 
 ### config file:
 - Add `config.env` file to the server folder, then add the following:

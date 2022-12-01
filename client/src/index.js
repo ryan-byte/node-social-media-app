@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import './assets/styles/index.css'; 
-import './assets/styles/navbar.css'; 
 import {BrowserRouter,Routes,Route} from "react-router-dom";
 
 import Navbar from './components/navbar';
@@ -12,6 +11,7 @@ import Home from './pages/home';
 import Signin from './pages/signin';
 import Signup from './pages/signup';
 import Profile from './pages/profile';
+import Search from './pages/search';
 import Settings from './pages/settings';
 
 
@@ -36,6 +36,7 @@ function MainLayoutRoutes() {
             <Routes>
               <Route exact path="/" element={<Home/>} />
               <Route exact path="/profile/:id" element={<Profile/>} />
+              <Route exact path="/search" element={<Search/>} />
               <Route exact path="/settings" element={<Settings/>} />
               <Route path="*" element={<NotFound/>} />
             </Routes>
