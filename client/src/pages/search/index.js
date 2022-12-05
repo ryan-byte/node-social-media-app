@@ -1,5 +1,8 @@
+import "../../assets/styles/search.css"
+
 import {useSearchParams, useNavigate} from "react-router-dom";
 import { useEffect, useState} from "react";
+import FoundUsers from "./foundUsers";
 
 
 export default function Search(){
@@ -18,8 +21,11 @@ export default function Search(){
     },[searchParams,navigate])
 
     return (
-        <div>
-            {query}
+        <div className="search-container">
+            <div className="search-query">
+                Search : "{query}"
+            </div>
+            <FoundUsers />
         </div>
     )
 }
