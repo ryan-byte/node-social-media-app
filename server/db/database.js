@@ -15,7 +15,7 @@ const postsCollection = db.collection("posts");
  * 
  * @param {string} email required.
  * @param {Object} projection optionnal: choose which column in the database to get, will return everything if left empty.
- * @returns database returned values OR {error}.
+ * @returns database return user OR {error}.
  * 
  * @example 
  * email = "example@gmail.com"
@@ -30,6 +30,23 @@ async function getUserByEmail(email,projection={}){
         return {error};
     }
 }
+
+/**
+ * this function gets all the users that have similar names from the database.
+ * 
+ * @param {string} username required.
+ * @returns object {status : 200,users : [data]} OR {status : 500}.
+ */
+async function getUsersByName(username){
+    try {
+        let users = await usersCollection.find({username: {$regex: username, $options: 'i'}}).toArray();
+        return {status:200,users};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > getUsersByName: \n"+ "\x1b[0m" + error.message);
+        return {status:500};
+    }
+}
+
 /**
  * gets the profile that much a specific user id.
  * @param {String} id
@@ -275,4 +292,5 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
 }
 
 module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
-                createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword};
+                createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
+                getUsersByName};

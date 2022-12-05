@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //api endpoints
 app.get("/api/user/profile/:id",apiRoutes.getUserProfileData);
-app.put("/api/user/profile",middleware.loggedUsersAccess,apiRoutes.updateUserProfileDetails);
+app.put("/api/user/profile/details",middleware.loggedUsersAccess,apiRoutes.updateUserProfileDetails);
 
 app.put("/api/user/setting/username",middleware.loggedUsersAccess,apiRoutes.updateUsername);
 app.put("/api/user/setting/password",middleware.loggedUsersAccess,apiRoutes.updatePassword);
@@ -23,6 +23,8 @@ app.put("/api/user/setting/password",middleware.loggedUsersAccess,apiRoutes.upda
 app.post("/api/user/post",middleware.loggedUsersAccess,apiRoutes.createUserPost);
 
 app.get("/api/posts/:userID",apiRoutes.getUserPosts);
+
+app.get("/api/search/user/username/:username",apiRoutes.searchUser);
 
 
 //route endpoints

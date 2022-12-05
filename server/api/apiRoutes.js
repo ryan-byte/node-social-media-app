@@ -179,7 +179,33 @@ async function updatePassword(req,res){
 }
 
 
+async function searchUser(req,res){
+    //get the userID from the requested param
+    let {username} = req.params;
+    let badParams = username == undefined ||
+                    username === ""||
+                    typeof username !== "string";
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    username = username.trim();
+    if (username.length === 0){
+        res.sendStatus(400);
+        return;
+    }
+    //get the users from the database
+    let {status,users} = await database.getUsersByName(username);
+    if (status === 200){
+        res.status(200).json(users);
+    }else{
+        res.sendStatus(status);
+    }
+}
+
+
 
 module.exports = {getUserProfileData,updateUserProfileDetails,
                 createUserPost,getUserPosts,
-                updateUsername,updatePassword};
+                updateUsername,updatePassword,
+                searchUser};

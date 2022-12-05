@@ -20,7 +20,7 @@ export default function UserInfo({userInfoData,ownerProfileVisited}){
             ev.preventDefault();
             setError(undefined);
             let data = {aboutMe};
-            let request = await postData("/api/user/profile",data,"PUT");
+            let request = await postData("/api/user/profile/details",data,"PUT");
             if (!request.ok){
                 setError("an error occured!");
             }
