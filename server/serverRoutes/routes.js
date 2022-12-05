@@ -41,7 +41,7 @@ async function userSignin(req,res){
 async function userSignup(req,res){
     //must be called after a middleware that verify if the user is not logged in
     //username, email and password must be sent from urlencoded form
-    const {username,email,password} = req.body === undefined ? "" : req.body;
+    let {username,email,password} = req.body === undefined ? "" : req.body;
     let condition = username === ""||
                     typeof username === "undefined"||
                     email === ""||
@@ -50,6 +50,11 @@ async function userSignup(req,res){
                     password.length < 8||
                     typeof password === "undefined";
     if (condition){
+        res.sendStatus(400);
+        return;
+    }
+    username = username.trim();
+    if (username.length === 0){
         res.sendStatus(400);
         return;
     }
