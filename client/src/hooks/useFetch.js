@@ -4,7 +4,7 @@ import {useEffect,useState} from "react"
  * makes a get request to a url then return a json data, error is undefined by default but if an
  * error occured it will change to a string, loading is either true or false (true if the request is still ongoing, false otherwise)
  * @param {String} url 
- * @returns Object: {data,error,loading}
+ * @returns Object: {data: json,error: "errorMessage",loading: Boolean}
  */
 export default function useFetch(url){
     const [data,setData] = useState(undefined);

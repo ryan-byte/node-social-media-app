@@ -39,7 +39,7 @@ async function getUserByEmail(email,projection={}){
  */
 async function getUsersByName(username){
     try {
-        let users = await usersCollection.find({username: {$regex: username, $options: 'i'}}).toArray();
+        let users = await usersCollection.find({username: {$regex: username, $options: 'i'}}).project({_id:1,username:1}).toArray();
         return {status:200,users};
     } catch (error) {
         console.error("\x1b[31m" + "error from database > getUsersByName: \n"+ "\x1b[0m" + error.message);
