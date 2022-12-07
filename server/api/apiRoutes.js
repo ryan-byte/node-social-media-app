@@ -178,7 +178,15 @@ async function updatePassword(req,res){
     res.sendStatus(status);
 }
 
-
+/**
+ * finds users with a similar username
+ * 
+ * requires (username) to be sent in the body as form urlencoded 
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * @returns 
+ */
 async function searchUser(req,res){
     //get the userID from the requested param
     let {username} = req.params;

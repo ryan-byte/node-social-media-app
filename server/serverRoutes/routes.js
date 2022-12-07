@@ -81,5 +81,33 @@ function logout(req,res){
     res.sendStatus(200);
 }
 
+/**
+ * 
+ * must be called after verifying the current user
+ * requires (targetID) to be sent in the body as form urlencoded 
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ */
+async function sendInvitation(req,res){
+    //get the current user id
+    let userID = res.locals.userID;
+    //get taget user
+    let {targetID} = req.body;
+    let badParams = targetID == undefined ||
+                    targetID === ""||
+                    typeof targetID !== "string"||
+                    userID === targetID;
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    //add the invitation request to the database
+    let {status} = await database.invitationRequest(userID,targetID);
 
-module.exports = {userSignup,userSignin,logout};
+    res.sendStatus(status);
+}
+
+
+module.exports = {userSignup,userSignin,logout,
+                sendInvitation};

@@ -158,7 +158,8 @@ async function userSignup(username,email,hashedPassword,hashSalt){
             //save his data
             let details = {aboutMe:""};
             let timeStamp = Math.floor(Date.now() / 1000);
-            let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,details,timeStamp})).insertedId.toString();
+            let friends = {ids:[],total:0,received_invitation:[],sent_invitation:[]};
+            let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,details,friends,timeStamp})).insertedId.toString();
             return {status:201,userID};
         }else{
             //throw an error if the get user has thrown an error
@@ -291,6 +292,21 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
     }
 }
 
+async function invitationRequest(currentUserID,targetID){
+    try {
+        //check if the they are already friends if yes then return a status code
+
+        //add the current userID to the target received_invitation array
+
+        //add the targetID to the user sent_invitation array
+
+        return {status:200}
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
-                getUsersByName};
+                getUsersByName,
+                invitationRequest};
