@@ -67,6 +67,30 @@ async function getUserProfileById(id){
 }
 
 /**
+ * Gets all the user friends data
+ * for old users who dont have the friends objects it will return a friends object that looks
+ * like that the user have no friends instead of undefined
+ * @param {Required} id 
+ */
+async function getUserFriendsDataById(id){
+    try {
+        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{friends:1,_id:0}});
+        if (output === null) return {status:404};
+        output = output["friends"];
+        if (output == undefined){
+            output = {ids:{},total:0,received_invitation:{},sent_invitation:{}};
+        }
+        return output;
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400,error:"bad id"};
+        }
+        console.error("\x1b[31m" + "error from database > getUserFriendsDataById: \n"+ "\x1b[0m" + error.message);
+        return {status:502,error:"server error"};
+    }
+}
+
+/**
  * Checks if the given user credentions are right by hashing the password then compares it to the hash stored in the database.
  * 
  * @param {*} email required.
@@ -158,7 +182,7 @@ async function userSignup(username,email,hashedPassword,hashSalt){
             //save his data
             let details = {aboutMe:""};
             let timeStamp = Math.floor(Date.now() / 1000);
-            let friends = {ids:[],total:0,received_invitation:[],sent_invitation:[]};
+            let friends = {ids:{},total:0,received_invitation:{},sent_invitation:{}};
             let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,details,friends,timeStamp})).insertedId.toString();
             return {status:201,userID};
         }else{
@@ -292,21 +316,77 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
     }
 }
 
-async function invitationRequest(currentUserID,targetID){
+/**
+ * updates the friends object inside a user document in the database
+ * 
+ * @param {Required} userID 
+ * @param {Required} newFriends 
+ */
+async function updateFriendsObject(userID,newFriends){
     try {
-        //check if the they are already friends if yes then return a status code
-
-        //add the current userID to the target received_invitation array
-
-        //add the targetID to the user sent_invitation array
-
-        return {status:200}
+        let _id = new ObjectId(userID);
+        const filter = { _id };
+        const updateDoc = {
+            $set: {
+                "friends":newFriends
+            },
+        };
+        await usersCollection.updateOne(filter,updateDoc);
+        return {status:200};
     } catch (error) {
-        
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > updateFriendsObject: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
     }
 }
 
-module.exports = {userSignup,userSignin,getUserProfileById,updateProfileDetails,
+/**
+ * adds an invitation request to the target user and adds a sent invitation to the current user
+ * 
+ * @param {Required} currentUserID the user who has sent an invitation
+ * @param {Required} targetID the user who will receiver the invitation
+ * @returns 
+ */
+async function invitationRequest(currentUserID,targetID){
+    try {
+        //get the current user friends object data
+        let currentUserFriends = await getUserFriendsDataById(currentUserID);
+        if (currentUserFriends.error){
+            return {status:currentUserFriends.status}
+        }
+        //get the target user friends object data
+        let targetUserFriends = await getUserFriendsDataById(targetID);
+        if (targetUserFriends.error){
+            return {status:targetUserFriends.status}
+        }
+        //check if the they are already friends if yes then return a status code
+        if (currentUserFriends.ids[targetID]){
+            return {status:400,message:"the user is already a friend"}
+        }
+        if (currentUserFriends.sent_invitation[targetID]){
+            return {status:400,message:"already sent an invitation"}
+        }
+
+        //add the targetID to the user sent_invitation array
+        currentUserFriends.sent_invitation[targetID] = 1;
+        //add the current userID to the target received_invitation array
+        targetUserFriends.received_invitation[currentUserID] = 1;
+
+        //update the database
+        await updateFriendsObject(currentUserID,currentUserFriends);
+        await updateFriendsObject(targetID,targetUserFriends);
+        
+        //send a status code of 200 if everything went fine
+        return {status:200};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > invitationRequest: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
+module.exports = {userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
                 invitationRequest};

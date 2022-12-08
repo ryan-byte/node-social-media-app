@@ -103,8 +103,11 @@ async function sendInvitation(req,res){
         return;
     }
     //add the invitation request to the database
-    let {status} = await database.invitationRequest(userID,targetID);
-
+    let {status,message} = await database.invitationRequest(userID,targetID);
+    if (message){
+        res.status(status).send(message);
+        return;
+    }
     res.sendStatus(status);
 }
 
