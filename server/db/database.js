@@ -349,7 +349,7 @@ async function updateFriendsObject(userID,newFriends){
  * @param {Required} targetID the user who will receiver the invitation
  * @returns 
  */
-async function invitationRequest(currentUserID,targetID){
+async function sendInvitationRequest(currentUserID,targetID){
     try {
         //get the current user friends object data
         let currentUserFriends = await getUserFriendsDataById(currentUserID);
@@ -389,4 +389,4 @@ async function invitationRequest(currentUserID,targetID){
 module.exports = {userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
-                invitationRequest};
+                sendInvitationRequest};

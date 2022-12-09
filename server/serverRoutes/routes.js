@@ -103,7 +103,7 @@ async function sendInvitation(req,res){
         return;
     }
     //add the invitation request to the database
-    let {status,message} = await database.invitationRequest(userID,targetID);
+    let {status,message} = await database.sendInvitationRequest(userID,targetID);
     if (message){
         res.status(status).send(message);
         return;
@@ -111,6 +111,38 @@ async function sendInvitation(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * 
+ * must be called after verifying the current user
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * 
+ * @example
+ * json_Resonpse = {
+ *      ids:{},
+ *      total:0,
+ *      received_invitation:{},
+ *      sent_invitation:{}
+ * }
+ */
+async function getUser_Invitations(req,res){
+    //get the current user id
+    let userID = res.locals.userID;
+    //get the received invitation of this user
+    let output = await database.getUserFriendsDataById(userID);
+    let received_invitation = output.received_invitation;
+    //send the data to the client
+    if (output.status){
+        if (output.error){
+            res.status(output.status).send(output.error);
+            return;
+        }
+        res.sendStatus(output.status);
+        return;
+    }
+    res.send(received_invitation);
+}
 
 module.exports = {userSignup,userSignin,logout,
-                sendInvitation};
+                sendInvitation,getUser_Invitations};
