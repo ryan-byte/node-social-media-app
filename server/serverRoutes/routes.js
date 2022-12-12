@@ -83,22 +83,27 @@ function logout(req,res){
 
 /**
  * 
- * must be called after verifying the current user
  * requires (targetID) to be sent in the body as form urlencoded 
  * 
  * @param {Required} req 
  * @param {Required} res 
+ * @example
+ * 'must be called after verifying the user'
  */
 async function sendInvitation(req,res){
     //get the current user id
     let userID = res.locals.userID;
     //get taget user
     let {targetID} = req.body;
+    if (userID === targetID){
+        res.status(400).send("cannot invite yourself");
+        return;
+    }
     let badParams = targetID == undefined ||
                     targetID === ""||
-                    typeof targetID !== "string"||
-                    userID === targetID;
-    if (badParams){
+                    typeof targetID !== "string";
+    let validID = await database.isValidID(targetID);
+    if (badParams || !validID){
         res.sendStatus(400);
         return;
     }
@@ -112,19 +117,12 @@ async function sendInvitation(req,res){
 }
 
 /**
- * 
- * must be called after verifying the current user
+ * get the received invitation of a user
  * 
  * @param {Required} req 
  * @param {Required} res 
- * 
  * @example
- * json_Resonpse = {
- *      ids:{},
- *      total:0,
- *      received_invitation:{},
- *      sent_invitation:{}
- * }
+ * 'must be called after verifying the user'
  */
 async function getUser_Invitations(req,res){
     //get the current user id
@@ -144,5 +142,37 @@ async function getUser_Invitations(req,res){
     res.send(received_invitation);
 }
 
+/**
+ * accepts invitation, (accepted_userID) must be sent in the body as urlencoded form 
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * @example
+ * 'must be called after verifying the user'
+ */
+async function accept_invitation(req,res){
+    //get the user id
+    let userID = res.locals.userID;
+    //get the accepted user id
+    let {accepted_userID} = req.body;
+    let badParams = accepted_userID == undefined ||
+                    accepted_userID === ""||
+                    typeof accepted_userID !== "string"||
+                    userID === accepted_userID;
+    let validID = await database.isValidID(accepted_userID);
+    if (badParams || !validID){
+        res.sendStatus(400);
+        return;
+    }
+    //verify and accept the user invitation
+    let {status,message} = await database.acceptInvitation(userID,accepted_userID);
+    //send back a status code
+    if (message){
+        res.status(status).send(message);
+        return;
+    }
+    res.sendStatus(status);
+}
+
 module.exports = {userSignup,userSignin,logout,
-                sendInvitation,getUser_Invitations};
+                sendInvitation,getUser_Invitations,accept_invitation};

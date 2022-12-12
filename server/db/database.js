@@ -10,6 +10,12 @@ const db = client.db("social-media-app-database");
 const usersCollection = db.collection("users");
 const postsCollection = db.collection("posts");
 
+
+async function isValidID(id){
+    return ObjectId.isValid(id);
+}
+
+
 /**
  * this function gets a user from the database that matches the given email.
  * 
@@ -353,20 +359,25 @@ async function sendInvitationRequest(currentUserID,targetID){
     try {
         //get the current user friends object data
         let currentUserFriends = await getUserFriendsDataById(currentUserID);
-        if (currentUserFriends.error){
+        if (currentUserFriends.status){
             return {status:currentUserFriends.status}
         }
         //get the target user friends object data
         let targetUserFriends = await getUserFriendsDataById(targetID);
-        if (targetUserFriends.error){
+        if (targetUserFriends.status){
             return {status:targetUserFriends.status}
         }
         //check if the they are already friends if yes then return a status code
         if (currentUserFriends.ids[targetID]){
             return {status:400,message:"the user is already a friend"}
         }
+
+        //check if one of them has already sent an invitation
         if (currentUserFriends.sent_invitation[targetID]){
             return {status:400,message:"already sent an invitation"}
+        }
+        if (currentUserFriends.received_invitation[targetID]){
+            return {status:400,message:"the target user already sent an invitation"}
         }
 
         //add the targetID to the user sent_invitation array
@@ -381,12 +392,68 @@ async function sendInvitationRequest(currentUserID,targetID){
         //send a status code of 200 if everything went fine
         return {status:200};
     } catch (error) {
-        console.error("\x1b[31m" + "error from database > invitationRequest: \n"+ "\x1b[0m" + error.message);
+        console.error("\x1b[31m" + "error from database > sendInvitationRequest: \n"+ "\x1b[0m" + error.message);
         return {status:502};
     }
 }
 
-module.exports = {userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
+/**
+ * accepts the invitation request of a user
+ * 
+ * @param {Required} currentUserID 
+ * @param {Required} acceptedUserID 
+ */
+async function acceptInvitation(currentUserID,acceptedUserID){
+    try {
+        //get the received invitations of the current user
+        let currentUser_Friends = await getUserFriendsDataById(currentUserID);
+
+        //check if both users are friends if so then return a status code
+        if (currentUser_Friends.ids[acceptedUserID]) return {status:400,message:"both users are already friends"};
+        
+        //check if the accepted user id is in the received_invitation of the current user
+        let received_invitation = currentUser_Friends.received_invitation;
+        if (received_invitation == undefined) return {status:currentUser_Friends.status}
+        if (received_invitation[acceptedUserID] == undefined) return {status:404,message:"invitation not found"};
+        
+        //update the friends object of the current user
+        delete currentUser_Friends.received_invitation[acceptedUserID];
+        currentUser_Friends.ids[acceptedUserID] = 1;
+        currentUser_Friends.total++;
+        if (currentUser_Friends.sent_invitation[acceptedUserID]) {
+            delete currentUser_Friends.sent_invitation[acceptedUserID];
+        }
+
+        //update the friends object of the accepted user
+        let acceptedUser_Friends = await getUserFriendsDataById(acceptedUserID);
+        acceptedUser_Friends.ids[currentUserID] = 1;
+        delete acceptedUser_Friends.sent_invitation[currentUserID];
+        acceptedUser_Friends.total++;
+        if (acceptedUser_Friends.received_invitation[currentUserID]) {
+            delete acceptedUser_Friends.received_invitation[currentUserID];
+        }
+
+        //update Objects in the database
+        let currentUser_requestStatus = await updateFriendsObject(currentUserID,currentUser_Friends);
+        if (currentUser_requestStatus.status !== 200){
+            return {status:currentUser_requestStatus.status};
+        }
+        let acceptedUser_requestStatus = await updateFriendsObject(acceptedUserID,acceptedUser_Friends);
+        if (acceptedUser_requestStatus.status !== 200){
+            return {status:acceptedUser_requestStatus.status};
+        }
+
+        //send back a status code
+        return {status:200};
+
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > acceptInvitation: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }    
+}
+
+module.exports = {isValidID,
+                userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
-                sendInvitationRequest};
+                sendInvitationRequest,acceptInvitation};
