@@ -41,6 +41,7 @@ app.get("/logout",routes.logout);
 app.post("/invite",middleware.loggedUsersAccess,routes.sendInvitation);
 app.get("/user/invitations",middleware.loggedUsersAccess,routes.getUser_Invitations);
 app.post("/user/invitations/accept",middleware.loggedUsersAccess,routes.accept_invitation);
+app.post("/user/invitations/decline",middleware.loggedUsersAccess,routes.decline_invitation);
 
 
 //listen for connections

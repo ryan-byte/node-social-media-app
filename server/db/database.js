@@ -452,8 +452,45 @@ async function acceptInvitation(currentUserID,acceptedUserID){
     }    
 }
 
+/**
+ * decline the invitation request of a user
+ * 
+ * @param {Required} currentUserID 
+ * @param {Required} declinedUserID 
+ */
+ async function declineInvitation(currentUserID,declinedUserID){
+    try {
+        //get the received invitations of the current user
+        let currentUser_Friends = await getUserFriendsDataById(currentUserID);
+
+        //check if both users are friends if so then return a status code
+        if (currentUser_Friends.ids[declinedUserID]) return {status:400,message:"both users are already friends"};
+        
+        //check if the accepted user id is in the received_invitation of the current user
+        let received_invitation = currentUser_Friends.received_invitation;
+        if (received_invitation == undefined) return {status:currentUser_Friends.status}
+        if (received_invitation[declinedUserID] == undefined) return {status:404,message:"invitation not found"};
+
+        //update the friends object of the current user
+        delete currentUser_Friends.received_invitation[declinedUserID];
+
+        //update Objects in the database
+        let currentUser_requestStatus = await updateFriendsObject(currentUserID,currentUser_Friends);
+        if (currentUser_requestStatus.status !== 200){
+            return {status:currentUser_requestStatus.status};
+        }
+
+        //send back a status code
+        return {status:200};
+
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > acceptInvitation: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }    
+}
+
 module.exports = {isValidID,
                 userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
-                sendInvitationRequest,acceptInvitation};
+                sendInvitationRequest,acceptInvitation,declineInvitation};

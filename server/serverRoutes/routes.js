@@ -174,5 +174,38 @@ async function accept_invitation(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * decline invitation, (declined_userID) must be sent in the body as urlencoded form 
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * @example
+ * 'must be called after verifying the user'
+ */
+ async function decline_invitation(req,res){
+    //get the user id
+    let userID = res.locals.userID;
+    //get the declined user id
+    let {declined_userID} = req.body;
+    let badParams = declined_userID == undefined ||
+                    declined_userID === ""||
+                    typeof declined_userID !== "string"||
+                    userID === declined_userID;
+    let validID = await database.isValidID(declined_userID);
+    if (badParams || !validID){
+        res.sendStatus(400);
+        return;
+    }
+    //verify and accept the user invitation
+    let {status,message} = await database.declineInvitation(userID,declined_userID);
+    //send back a status code
+    if (message){
+        res.status(status).send(message);
+        return;
+    }
+    res.sendStatus(status);
+}
+
 module.exports = {userSignup,userSignin,logout,
-                sendInvitation,getUser_Invitations,accept_invitation};
+                sendInvitation,getUser_Invitations,
+                accept_invitation,decline_invitation};
