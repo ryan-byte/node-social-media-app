@@ -1,0 +1,45 @@
+.invitations-container{
+    width: 800px;
+    min-height: 100vh;
+    height: 100%;
+    margin: auto;
+    position: relative;
+    background-color: var(--color-post-background);
+    color: var(--color-post-outer-text);
+}
+@media only screen and (max-width:800px) {
+    .invitations-container{
+        width:100%
+    }
+}
+.invitations-user-holder{
+    display: flex;
+    padding: 30px 30px 20px 30px;
+    border-bottom: 1px var(--color-post-outer-text) solid;
+    color: var(--color-post-outer-text);
+    font-size: x-large;
+}
+.invitation-user-link:hover{
+    cursor: pointer;
+}
+.invitation-buttons{
+    margin-left: auto;
+}
+.invitation-accept{
+    background-color: var(--color-invitation-accept);
+    border: none;
+    border-radius: 10px;
+    margin: 0 10px;
+}
+.invitation-accept:hover{
+    filter: brightness(80%);
+}
+.invitation-decline{
+    background-color: var(--color-invitation-decline);
+    border: none;
+    border-radius: 10px;
+    margin: 0 10px;
+}
+.invitation-decline:hover{
+    filter: brightness(80%);
+}

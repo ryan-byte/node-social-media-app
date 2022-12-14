@@ -7,6 +7,11 @@
     background-color: var(--color-post-background);
     color: var(--color-post-outer-text);
 }
+@media only screen and (max-width:800px) {
+    .search-container{
+        width:100%
+    }
+}
 .search-query{
     padding: 30px 30px 20px 30px;
     font-size: xx-large;
@@ -23,6 +28,7 @@
 }
 .search-user-holder:hover{
     background-color: var(--color-link-hover);
+    cursor: pointer;
 }
 @media only screen and (max-width: 800px){
     .search-container{

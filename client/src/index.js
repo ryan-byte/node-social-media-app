@@ -13,6 +13,7 @@ import Signup from './pages/signup';
 import Profile from './pages/profile';
 import Search from './pages/search';
 import Settings from './pages/settings';
+import Invitations from './pages/invitations';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -38,6 +39,7 @@ function MainLayoutRoutes() {
               <Route exact path="/profile/:id" element={<Profile/>} />
               <Route exact path="/search" element={<Search/>} />
               <Route exact path="/settings" element={<Settings/>} />
+              <Route exact path="/Invitations" element={<Invitations/>} />
               <Route path="*" element={<NotFound/>} />
             </Routes>
           </main>

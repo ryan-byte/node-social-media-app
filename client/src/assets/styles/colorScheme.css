@@ -14,4 +14,7 @@
     --color-empty-background-profile:#BFBFBF;
     --color-active-link: #950740;
     --color-link-hover: #6e0730;
+
+    --color-invitation-accept:#0C72CF;
+    --color-invitation-decline:#E93B3B;
 }
