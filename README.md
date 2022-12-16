@@ -12,7 +12,7 @@ mongodbURL = "<mongodb connect url>"
 ### how to run the project:
 - Install the project modules by running the following commands on the root of the project:
 ```
-npm run ci
+npm ci
 npm run install-modules
 ```
 

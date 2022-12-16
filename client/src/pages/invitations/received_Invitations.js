@@ -1,33 +1,37 @@
-import {useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import empty_profile from "../../assets/images/emptyProfile.png";
 
-export default function ReceivedInvitations({usersArray}){
-    const navigate = useNavigate();
-    
-    return (
-        <div>
-            {
-                usersArray.map((user)=>
+export default function ReceivedInvitations({invitations}){
+    function renderInvitations(invitations){
+        let elementsArray = [];
+        for (const id in invitations){
+            elementsArray.push(
                     <div 
                     className="invitations-user-holder" 
-                    key={user._id} >
-                        <img 
-                            className="user-post-profile-image invitation-user-link" 
-                            src={empty_profile} 
-                            alt= {user.username + " profile"}
-                            onClick = {() => {navigate("/profile/"+user._id)}}  />
-                        <div className="ms-2 invitation-user-link"
-                            onClick = {() => {navigate("/profile/"+user._id)}} >
-                            {user.username}
-                        </div>
+                    key={id} >
+                        <Link to={"/profile/"+id}>
+                            <img 
+                                className="user-post-profile-image invitation-user-link" 
+                                src={empty_profile} 
+                                alt= {invitations[id].username + " profile"}/>
+                        </Link>
+                        <Link to={"/profile/"+id} className="ms-2 invitation-user-link" style={{color:"black",textDecoration:"none"}}>
+                            {invitations[id].username}
+                        </Link>
                         <div className="invitation-buttons">
-                            <input type="button" class="invitation-accept" value="Accept" />
-                            <input type="button" class="invitation-decline" value="Decline" />
+                            <input type="button" className="invitation-accept" value="Accept" />
+                            <input type="button" className="invitation-decline" value="Decline" />
                         </div>
                     </div>
-                )
-            }
+            )
+        }
+        return elementsArray;
+    }
+
+    return (
+        <div>
+            {renderInvitations(invitations)}
         </div>
     )
 }

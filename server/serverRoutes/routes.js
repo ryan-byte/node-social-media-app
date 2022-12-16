@@ -128,7 +128,7 @@ async function getUser_Invitations(req,res){
     //get the current user id
     let userID = res.locals.userID;
     //get the received invitation of this user
-    let output = await database.getUserFriendsDataById(userID);
+    let {friends: output} = await database.getUserFriendsDataById(userID);
     let received_invitation = output.received_invitation;
     //send the data to the client
     if (output.status){
