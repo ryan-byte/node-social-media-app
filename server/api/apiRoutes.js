@@ -18,7 +18,7 @@ async function getUserProfileData(req,res){
         res.status(200).send(data);        
     }
 }
-1
+
 /**
  * update the user profile details, must pass the updated details in the body as x-www-form-urlencoded.
  * 

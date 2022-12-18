@@ -43,6 +43,8 @@ app.get("/user/invitations",middleware.loggedUsersAccess,routes.getUser_Invitati
 app.post("/user/invitations/accept",middleware.loggedUsersAccess,routes.accept_invitation);
 app.post("/user/invitations/decline",middleware.loggedUsersAccess,routes.decline_invitation);
 
+app.get("/user/friends",middleware.loggedUsersAccess,routes.getUser_Friends);
+
 
 //listen for connections
 app.listen(PORT,()=>console.log("\x1b[32m" + "server is on port " + PORT + "\x1b[0m"));

@@ -9,6 +9,7 @@ import ErrorOutput from '../../components/output/ErrorOutput';
 import PasswordInput from '../../components/form/PasswordInput';
 import EmailInput from '../../components/form/EmailInput';
 import Loading from '../../components/feedback/Loading';
+import {UpdateFriends} from '../../utils/FriendsObject';
 
 
 function Signin(){
@@ -47,7 +48,8 @@ function Signin(){
         
         //do something depending on the response
         if (response.ok){
-            navigate("/");
+            await UpdateFriends();
+            navigate("/")
         }else{
             let status = response.status;
             if (status === 404){

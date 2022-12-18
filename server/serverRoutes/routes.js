@@ -143,6 +143,31 @@ async function getUser_Invitations(req,res){
 }
 
 /**
+ * get the friends object of a user that will contain receivedInvitation/ sentInvitation/ friendsIds/ ...
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * @example
+ * 'must be called after verifying the user'
+ */
+async function getUser_Friends(req,res){
+    //get the current user id
+    let userID = res.locals.userID;
+    //get the received invitation of this user
+    let {friends: output} = await database.getUserFriendsDataById(userID);
+    //send the data to the client
+    if (output.status){
+        if (output.error){
+            res.status(output.status).send(output.error);
+            return;
+        }
+        res.sendStatus(output.status);
+        return;
+    }
+    res.send(output);
+}
+
+/**
  * accepts invitation, (accepted_userID) must be sent in the body as urlencoded form 
  * 
  * @param {Required} req 
@@ -208,4 +233,4 @@ async function accept_invitation(req,res){
 
 module.exports = {userSignup,userSignin,logout,
                 sendInvitation,getUser_Invitations,
-                accept_invitation,decline_invitation};
+                accept_invitation,decline_invitation,getUser_Friends};

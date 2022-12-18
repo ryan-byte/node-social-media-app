@@ -10,6 +10,7 @@ import TextInput from '../../components/form/TextInput';
 import PasswordInput from '../../components/form/PasswordInput';
 import EmailInput from '../../components/form/EmailInput';
 import Loading from '../../components/feedback/Loading';
+import { UpdateFriends } from '../../utils/FriendsObject';
 
 
 function Signup(){
@@ -53,6 +54,7 @@ function Signup(){
         
         //do something depending on the response
         if (response.ok){
+            await UpdateFriends();
             navigate("/");
         }else{
             let status = response.status;

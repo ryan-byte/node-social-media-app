@@ -11,6 +11,7 @@ import ErrorOutput from "../../components/output/ErrorOutput";
 import UserImages from "./userImages";
 import UserContent from "./userContent";
 import UserPublish from "./userPublish";
+import Interact from "./interact";
 
 
 export default function Profile(){
@@ -25,6 +26,7 @@ export default function Profile(){
     return (
         <div>
             {userInfoData && <UserImages userInfoData={userInfoData}/>}
+            {userInfoData && <Interact userInfoData={userInfoData}/>}
             {loading && <Loading />}
             {error && <ErrorOutput message={error}/>}
             {userInfoData && <UserInfo userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited} />}

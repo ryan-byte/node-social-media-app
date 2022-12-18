@@ -5,6 +5,7 @@ import Loading from "../../components/feedback/Loading";
 
 export default function General({usernameInCookie}){
     const [username,setUsername] = useState("");
+    const [username_placeholder,setUsername_placeholder] = useState(usernameInCookie);
     const [error,setError] = useState(undefined);
     const [loading,setLoading] = useState(false);
 
@@ -15,10 +16,12 @@ export default function General({usernameInCookie}){
         //start feedback
         setLoading(true);
 
-        console.log(username);
         let data = {username};
         let request = await postData("/api/user/setting/username",data,"PUT");
-        if (!request.ok){
+        if (request.ok){
+            setUsername_placeholder(username)
+            setUsername("");
+        }else{
             setError("an error occured!");
         }
         document.activeElement.blur();
@@ -39,7 +42,7 @@ export default function General({usernameInCookie}){
                         className="setting-form-control form-control" 
                         style={{"width":"50%"}} 
                         aria-describedby="change username" 
-                        placeholder={usernameInCookie}
+                        placeholder={username_placeholder}
                         
                         value={username}
                         onChange={(ev)=>setUsername(ev.target.value)}/>

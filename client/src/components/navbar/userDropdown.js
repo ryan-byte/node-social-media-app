@@ -2,12 +2,15 @@ import {Link} from "react-router-dom";
 import { removeLoginCookies } from "../../utils/accessPage";
 import empty_profile from "../../assets/images/emptyProfile.png";
 
+import { DeleteFriends } from "../../utils/FriendsObject";
+
 function userDropdown({userID}){
 
     //prepare logout function
     async function onLogout(ev){
         ev.preventDefault();
         await removeLoginCookies();
+        DeleteFriends();
         window.location.replace("/");
     }
 

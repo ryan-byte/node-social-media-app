@@ -39,10 +39,10 @@ function Navbar(){
                         <Link className={pathName === "/" ? "nav-link active":"nav-link"} aria-current="page" to="/">Home</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className={pathName === "/invitations" ? "nav-link active":"nav-link"} aria-current="page" to="/invitations">Invitations</Link>
+                        {userInfo === undefined && <Link className="nav-link" aria-current="page" to="/signin">Signin</Link>}
                     </li>
                     <li className="nav-item">
-                        {userInfo === undefined && <Link className="nav-link" aria-current="page" to="/signin">Signin</Link>}
+                        {userInfo && <Link className={pathName === "/invitations" ? "nav-link active":"nav-link"} aria-current="page" to="/invitations">Invitations</Link>}
                     </li>
                 </ul>
                 
