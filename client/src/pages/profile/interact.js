@@ -1,9 +1,8 @@
-import { GetFriends , UpdateFriends} from "../../utils/FriendsObject"
+import { UpdateFriends} from "../../utils/FriendsObject"
 
 import postData from "../../utils/postData";
 
-export default function Interact({userInfoData,ownerProfileVisited}){
-    let currentUser_Friends = GetFriends();
+export default function Interact({userInfoData,ownerProfileVisited,currentUser_Friends}){
     let targetUserID = userInfoData["_id"];
 
     async function inviteUser(ev,targetUserID){
@@ -92,20 +91,22 @@ export default function Interact({userInfoData,ownerProfileVisited}){
         switch (type) {
             case "friends":
                 return (
-                    <input type="button" value="Friends" />
+                    <span className="profile-interact-button low-brightness" value="Friends">Friends</span>
                 );
             case "sentRequest":
                 return (
-                    <input type="button" value="Sent" />
+                    <span className="profile-interact-button low-brightness" value="Sent">Sent</span>
                 );
             case "receivedRequest":
                 return (
                     <div>
                         <input 
+                            className="btn btn-primary mx-2"
                             type="button"  
                             value="Accept" 
                             onClick={(ev) => acceptUser(ev,targetUserID)} />
                         <input 
+                            className="btn btn-danger mx-2"
                             type="button" 
                             value="Decline" 
                             onClick={(ev) => declineUser(ev,targetUserID)} />
@@ -114,6 +115,7 @@ export default function Interact({userInfoData,ownerProfileVisited}){
             default:
                 return (
                     <input 
+                        className="profile-interact-button"
                         type="button" 
                         value="Invite" 
                         onClick={(ev) => inviteUser(ev,targetUserID)} />

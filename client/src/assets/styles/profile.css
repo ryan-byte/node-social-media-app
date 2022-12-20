@@ -63,10 +63,22 @@
     background-color: transparent;
     overflow: hidden;
     width: 300px;
+    padding: 5px;
     text-align: center;
     border: none;
     resize: none;
     color: inherit;
+}
+.profile-interact-button{
+    padding: 5px;
+    color: var(--color-post-inner-text);
+    background-color: var(--color-post-background);
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.low-brightness{
+    filter: brightness(0.75);
 }
 
 .user-publish-container{

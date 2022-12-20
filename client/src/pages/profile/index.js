@@ -13,6 +13,7 @@ import UserContent from "./userContent";
 import UserPublish from "./userPublish";
 import Interact from "./interact";
 
+import { GetFriends } from "../../utils/FriendsObject"
 
 export default function Profile(){
     const {id} = useParams();
@@ -23,10 +24,22 @@ export default function Profile(){
     const ownerID = getLoginCookieData().userID;
     const ownerProfileVisited = ownerID === id;
 
+    //get the friends object inside the localstorage
+    const currentUser_Friends = GetFriends();
+
     return (
         <div>
             {userInfoData && <UserImages userInfoData={userInfoData}/>}
-            {userInfoData && <Interact userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited}/>}
+
+            {
+                (userInfoData && currentUser_Friends)
+                && <Interact 
+                        userInfoData={userInfoData} 
+                        ownerProfileVisited={ownerProfileVisited}
+                        currentUser_Friends={currentUser_Friends}
+                    />
+            }
+            
             {loading && <Loading />}
             {error && <ErrorOutput message={error}/>}
             {userInfoData && <UserInfo userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited} />}

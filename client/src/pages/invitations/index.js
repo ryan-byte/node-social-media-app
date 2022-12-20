@@ -8,6 +8,7 @@ import useFetch from "../../hooks/useFetch";
 
 export default function Invitations(){
     const {data: invitations,error,loading} = useFetch("/user/invitations");
+    console.log(invitations);
     
     return (
         <div className="invitations-container">
