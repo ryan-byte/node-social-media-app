@@ -20,7 +20,7 @@ function DeleteFriends(){
  * gets the friends object stored in the localstorage
  */
 function GetFriends(){
-    return localStorage.getItem(FriendsObjectName);
+    return JSON.parse(localStorage.getItem(FriendsObjectName));
 }
 
 export {UpdateFriends,DeleteFriends,GetFriends}

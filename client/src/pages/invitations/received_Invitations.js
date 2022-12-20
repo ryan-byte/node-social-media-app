@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import empty_profile from "../../assets/images/emptyProfile.png";
 
+import { UpdateFriends} from "../../utils/FriendsObject"
 import postData from "../../utils/postData";
 
 export default function ReceivedInvitations({invitations}){
@@ -17,6 +18,8 @@ export default function ReceivedInvitations({invitations}){
         }
         let response = await postData("/user/invitations/accept",data);
         if (response.ok){
+            //update the friends object in the localstorage
+            UpdateFriends();
             //delete user from the invitation page
             ev.target.parentElement.parentElement.remove();
         }else{
@@ -38,6 +41,8 @@ export default function ReceivedInvitations({invitations}){
         }
         let response = await postData("/user/invitations/decline",data);
         if (response.ok){
+            //update the friends object in the localstorage
+            UpdateFriends();
             //delete user from the invitation page
             ev.target.parentElement.parentElement.remove();
         }else{

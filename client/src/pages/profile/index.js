@@ -26,7 +26,7 @@ export default function Profile(){
     return (
         <div>
             {userInfoData && <UserImages userInfoData={userInfoData}/>}
-            {userInfoData && <Interact userInfoData={userInfoData}/>}
+            {userInfoData && <Interact userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited}/>}
             {loading && <Loading />}
             {error && <ErrorOutput message={error}/>}
             {userInfoData && <UserInfo userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited} />}

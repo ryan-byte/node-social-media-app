@@ -28,9 +28,6 @@ function Signin(){
         //start loading feedback
         setLoading(true);
         //check if the inputs are correct
-        if (password.length <= 8){
-            errorMessage += "password length must be bigger then 8\n";
-        }
         if (errorMessage === ""){
             setError(undefined);
         }else{
