@@ -1,0 +1,29 @@
+.friends-container{
+    width: 800px;
+    min-height: 100vh;
+    height: 100%;
+    margin: auto;
+    position: relative;
+    background-color: var(--color-post-background);
+    color: var(--color-post-outer-text);
+}
+@media only screen and (max-width:800px) {
+    .friends-container{
+        width:100%
+    }
+}
+.friends-user-holder{
+    color: inherit;
+    display: flex;
+    padding: 30px 30px 20px 30px;
+    border-bottom: 1px var(--color-post-outer-text) solid;
+    color: var(--color-post-outer-text);
+    font-size: x-large;
+}
+.friends-user-holder:hover{
+    background-color: var(--color-link-hover);
+    cursor: pointer;
+}
+.friends-user-link:hover{
+    cursor: pointer;
+}
