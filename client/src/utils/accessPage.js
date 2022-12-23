@@ -7,10 +7,10 @@ const userCookieName = "user";
  * @example 
  * const navigate = useNavigate();
  * useEffect(()=>{
- *      unloggedUsersAccess(navigate);
+ *      restricted_To_LoggedUsers(navigate);
  * });
 */
-function unloggedUsersAccess(navigate){
+function restricted_To_LoggedUsers(navigate){
     let userCookieValue = Cookies.get(userCookieName);
     if (userCookieValue){
         navigate("/");
@@ -22,11 +22,14 @@ function unloggedUsersAccess(navigate){
  * @example 
  * const navigate = useNavigate();
  * useEffect(()=>{
- *      unloggedUsersAccess(navigate);
+ *      restricted_To_unLoggedUsers(navigate);
  * });
  */
-function loggedUsersAccess(navigate){
-    //must add
+function restricted_To_unLoggedUsers(navigate){
+    let userCookieValue = Cookies.get(userCookieName);
+    if (userCookieValue === undefined){
+        navigate("/signin");
+    }
 }
 /**
  * Removes the cookies used for authentication.
@@ -48,4 +51,4 @@ function getLoginCookieData(){
 
 
 
-export {loggedUsersAccess,unloggedUsersAccess,removeLoginCookies,getLoginCookieData};
+export {restricted_To_unLoggedUsers,restricted_To_LoggedUsers,removeLoginCookies,getLoginCookieData};

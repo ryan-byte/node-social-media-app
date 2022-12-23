@@ -2,7 +2,7 @@ import '../../assets/styles/signin.css';
 import { ReactComponent as GoBack } from  '../../assets/svg/goBack.svg'; 
 import {Link,useNavigate} from "react-router-dom";
 import { useState ,useEffect } from 'react';
-import {unloggedUsersAccess} from "../../utils/accessPage";
+import {restricted_To_LoggedUsers} from "../../utils/accessPage";
 
 import postData from '../../utils/postData';
 import ErrorOutput from '../../components/output/ErrorOutput';
@@ -71,7 +71,7 @@ function Signup(){
     }
 
     useEffect(()=>{
-        unloggedUsersAccess(navigate);
+        restricted_To_LoggedUsers(navigate);
     });
 
     return(

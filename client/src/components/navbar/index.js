@@ -47,6 +47,9 @@ function Navbar(){
                     <li className="nav-item">
                         {userInfo && <Link className={pathName === "/friends" ? "nav-link active":"nav-link"} aria-current="page" to="/friends">friends</Link>}
                     </li>
+                    <li className="nav-item">
+                        {userInfo && <Link className={pathName === "/chat" ? "nav-link active":"nav-link"} aria-current="page" to="/chat">chat</Link>}
+                    </li>
                 </ul>
                 
                 {userInfo && <UserDropdown userID={userInfo.userID} />}
