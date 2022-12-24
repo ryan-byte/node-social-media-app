@@ -15,6 +15,7 @@ import Search from './pages/search';
 import Settings from './pages/settings';
 import Invitations from './pages/invitations';
 import Friends from './pages/friends';
+import Chat from './pages/chat';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -42,6 +43,7 @@ function MainLayoutRoutes() {
               <Route exact path="/settings" element={<Settings/>} />
               <Route exact path="/invitations" element={<Invitations/>} />
               <Route exact path="/friends" element={<Friends/>} />
+              <Route exact path="/chat" element={<Chat/>} />
               <Route path="*" element={<NotFound/>} />
             </Routes>
           </main>
