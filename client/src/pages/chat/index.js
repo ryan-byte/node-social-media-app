@@ -1,9 +1,14 @@
+import "../../assets/styles/chat.css"
+
 import io from "socket.io-client";
 import {useEffect, useState} from "react";
 
+import ChatUI from "./chatUI";
+import ErrorOutput from "../../components/output/ErrorOutput";
 
 export default function Chat(){
-    const [socket,setSocket] = useState(null);
+    const [socket,setSocket] = useState(undefined);
+    const [error,setError] = useState(undefined);
 
     useEffect(()=>{
         const newSocket = io();
@@ -21,8 +26,10 @@ export default function Chat(){
             if (err.data){
                 //show an error if there is something wrong with the cookie credentials
                 console.error(err.message + ": " + err.data.details);
+                setError(err.message + ": " + err.data.details);
             }else{
                 console.error(err.message);
+                setError(err.message);
             }
         });
 
@@ -36,7 +43,8 @@ export default function Chat(){
 
     return (
         <div>
-            chat here
+            {error && <ErrorOutput message={error}/>}
+            {socket && <ChatUI />}
         </div>
     )
 }

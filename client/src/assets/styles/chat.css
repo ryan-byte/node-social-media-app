@@ -1,0 +1,142 @@
+.chat-container{
+    width: 1000px;
+    min-height: 90vh;
+    height: 90%;
+    margin: auto;
+    position: relative;
+    background-color: var(--color-post-background);
+    color: var(--color-post-outer-text);
+
+}
+
+.chat-users-side{
+    margin: 0;
+    padding: 0;
+    width: 300px;
+    background-color: var(--color-post-background);
+    position: absolute;
+    height: 100%;
+    overflow: auto;
+    border-right: solid 1px black;
+}
+
+.chat-user-holder{
+    font-size: large;
+    
+    display: block;
+    color: var(--color-post-outer-text);
+    fill: black;
+    padding: 16px;
+    text-decoration: none;
+    border-bottom: solid 1px black;
+}
+.chat-user-holder:hover:not(.active){
+    background-color: var(--color-link-hover);
+    color: white;
+    fill: white;
+    cursor: pointer;
+}
+.chat-user-holder.active {
+    background-color: var(--color-active-link);
+    color: white;
+    fill: white;
+}
+.chat-messages-side{
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 300px;
+    padding-left: 16px;
+    position: absolute;
+    height: 100%;
+    overflow: auto;
+    width: 800px;
+    background-color: var(--color-post-background);
+    color: var(--color-post-inner-text);
+}
+
+@media only screen and (max-width:1000px) {
+    .chat-container{
+        width:100%
+    }
+    .chat-users-side{
+        width: 30%;
+        border-bottom: solid 1px black;
+    }
+    .chat-messages-side{
+        margin-left: 30%;
+        width: 70%;
+    }
+}
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+    .chat-users-side {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+    }
+    .chat-user-holder {float: left;}
+    .chat-messages-side {
+        margin-left: 0; 
+        margin-top: 20px;
+        width: 100%;
+    }
+    .chat-user-holder{
+        border-bottom: none;
+    }
+}
+
+.chat-all-messages-holder{
+    height: 90%;
+    max-height: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.chat-message-holder{
+    overflow:auto;
+}
+.chat-message-currentUser{
+    color: var(--color-chat-currentUser-text-fg);
+    background-color: var(--color-chat-currentUser-text-bg);
+    border-radius: 10px;
+
+    padding: 10px;
+    margin: 10px;
+    float:right;
+    max-width: 50%;
+}
+.chat-message-otherUser{
+    color: var(--color-chat-otherUser-text-fg);
+    background-color: var(--color-chat-otherUser-text-bg);
+    border-radius: 10px;
+
+    padding: 10px;
+    margin: 10px;
+    float:left;
+    max-width: 45%;
+}
+.chat-input-holder{
+    margin-top: 20px;
+}
+.chat-input-text{
+    height: 30px;
+    margin: 0 20px;
+    background-color: var(--color-chat-input-text-bg);
+    color: var(--color-chat-input-text-fg);
+    border: none;
+    padding-left: 5px;
+    border-radius: 10px;
+    width: 80%;
+
+}
+.chat-input-button{
+    height: 30px;
+    color: var(--color-chat-input-submit-fg);
+    background-color: var(--color-chat-input-submit-bg);
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+
+}

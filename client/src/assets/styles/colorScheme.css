@@ -17,4 +17,16 @@
 
     --color-invitation-accept:#0C72CF;
     --color-invitation-decline:#E93B3B;
+
+    --color-chat-input-text-bg: #dbdbdb;
+    --color-chat-input-text-fg: #000000;
+    
+    --color-chat-input-submit-bg: #ac0045b4;
+    --color-chat-input-submit-fg: #FFFFFF;
+    
+    --color-chat-currentUser-text-bg: #ac0045b4;
+    --color-chat-currentUser-text-fg: #dbdbdb;
+    
+    --color-chat-otherUser-text-bg: #dbdbdb;
+    --color-chat-otherUser-text-fg: #000000;
 }

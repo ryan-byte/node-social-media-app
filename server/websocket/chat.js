@@ -14,7 +14,7 @@ function Chat(server){
     // try path chat later
     const io = socketio(server);
 
-    //create a socket io middleware for authentication
+    //create a socket io middleware for authorization
     io.use((socket, next) => {
         let loginCookie = verifyLoginCookie(socket.request);
         if (loginCookie){
