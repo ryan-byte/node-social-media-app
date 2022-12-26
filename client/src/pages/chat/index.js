@@ -11,9 +11,9 @@ export default function Chat(){
     const [error,setError] = useState(undefined);
 
     useEffect(()=>{
-        const newSocket = io();
+        let userid = "6392249e96dab8f6d1d0446a"
+        const newSocket = io(`?targetUserId=${userid}`);
         setSocket(newSocket);
-
 
         newSocket.on("connect",()=>{
             console.log("user connected");

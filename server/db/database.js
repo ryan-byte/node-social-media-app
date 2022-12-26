@@ -2,19 +2,40 @@ const {MongoClient,ObjectId} = require("mongodb");
 const {BSONTypeError} = require("bson");
 const hashPassword = require("../utils/hashPassword");
 
-
 const mongodbURL = process.env.mongodbURL;
 const client = new MongoClient(mongodbURL);
 const db = client.db("social-media-app-database");
 
 const usersCollection = db.collection("users");
 const postsCollection = db.collection("posts");
+const chatRoomCollection = db.collection("chat_room");
 
 
 async function isValidID(id){
     return ObjectId.isValid(id);
 }
 
+/**
+ * checks if the userID exists
+ * @param {object} userID 
+ * @returns bool
+ */
+async function userExists(userID){
+    try {
+        userID = new ObjectId(userID);
+        let count = await usersCollection.countDocuments({_id:userID});
+
+        if (count > 0) return true;
+        else return false;
+
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return false;
+        }
+        console.error("\x1b[31m" + "error from database > getUserProfileById: \n"+ "\x1b[0m" + error.message);
+        return false;
+    }
+}
 
 /**
  * this function gets a user from the database that matches the given email.
@@ -494,8 +515,54 @@ async function acceptInvitation(currentUserID,acceptedUserID){
     }    
 }
 
+/**
+ * gets a unique chat room id for 2 users.
+ * if the chat room for these users doesnt exist then it will create one and return it.
+ * @param {Object} user1_ID a valid user id
+ * @param {Object} user2_ID a valid user id
+ * @return {Object} unique room id
+ */
+async function getChatRoom(user1_ID,user2_ID){
+    try {
+        //find the chat room 
+        let room = await chatRoomCollection.findOne(
+            {$or: [
+                    {"user1": user1_ID, "user2": user2_ID},
+                    {"user1": user2_ID, "user2": user1_ID},
+                ]
+            }
+        )
+        if (room){
+            //return the room id
+            let roomID = room._id.toString();
+            return {roomID};
+        }else{//create a room if its not found 
+            //make sure both users exists
+            let usersExists = (await userExists(user1_ID)) && (await userExists(user2_ID));
+            if (!usersExists){
+                return {errorMessage:"user Not Found"};
+            }
+
+            //create room chat
+            let createdDoc = await chatRoomCollection.insertOne({"user1": user1_ID, "user2": user2_ID});
+            //return the room id
+            let roomID = createdDoc.insertedId.toString();
+            return {roomID};
+        }
+        
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {errorMessage:"Bad Parameter"};
+        }
+        console.error("\x1b[31m" + "error from database > getChatRoom: \n"+ "\x1b[0m" + error.message);
+        return {errorMessage:"Server error"};
+    }
+
+}
+
 module.exports = {isValidID,
                 userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
-                sendInvitationRequest,acceptInvitation,declineInvitation};
+                sendInvitationRequest,acceptInvitation,declineInvitation,
+                getChatRoom};
