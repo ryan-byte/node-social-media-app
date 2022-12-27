@@ -1,37 +1,51 @@
 import empty_profile from "../../assets/images/emptyProfile.png";
+import { GetFriends } from "../../utils/FriendsObject";
+import {useState,useEffect} from "react";
 
+export default function ChatUI({changeRoom}){
+    const [friends,setFriends] = useState(undefined);
+    const [activeUser,setActiveUser] = useState(null);
 
-export default function ChatUI(){
-    return (
-        <div className="chat-container">
-            <div className="chat-users-side">
-                <div className="chat-user-holder"> 
+    function changeTargetUser(id){
+        //set the active user for the user feedback
+        if (id !== activeUser){
+            setActiveUser(id);
+            //set the active user for the socket to change rooms
+            changeRoom(id);
+        }
+    }
+
+    function renderFriends(friends){
+        let elementsArray = [];
+        for (const id in friends){
+            elementsArray.push(
+                <div 
+                className={activeUser === id ? "chat-user-holder active" : "chat-user-holder"}
+                onClick={(ev)=>changeTargetUser(id)}
+                key={id} > 
                     <img 
                         className="user-post-profile-image invitation-user-link" 
                         src={empty_profile} 
                         alt="profile"/>
                     <span className="ms-2">
-                        user1
+                        {friends[id].username}
                     </span>
                 </div>
-                <div className="chat-user-holder active">
-                    <img 
-                        className="user-post-profile-image invitation-user-link" 
-                        src={empty_profile} 
-                        alt="profile" />
-                    <span className="ms-2">
-                        thesoulsreaper15
-                    </span>
-                </div>
-                <div className="chat-user-holder">
-                    <img 
-                        className="user-post-profile-image invitation-user-link" 
-                        src={empty_profile} 
-                        alt="profile" />
-                    <span className="ms-2">
-                        user3
-                    </span>
-                </div>
+            );
+        }
+        return elementsArray;
+    }
+
+
+    useEffect(()=>{
+        setFriends(GetFriends)
+    }, [])
+    
+
+    return (
+        <div className="chat-container">
+            <div className="chat-users-side">
+                {friends && renderFriends(friends.ids)}
             </div>
 
 

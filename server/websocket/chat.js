@@ -30,63 +30,29 @@ function Chat(server){
         }
     });
 
-    //socket io middleware for getting the target user id
-    io.use(async (socket,next)=>{
-        let targetUserId = socket.handshake.query.targetUserId;
-        if (targetUserId){
-            //verify that the targetUserId is a correct object id
-
-            //To Do
-            let validID = await database.isValidID(targetUserId);
-            if (validID){
-                //pass targetUserId to the next route
-                socket.data.targetUserId = targetUserId;
-                next();
-            }else{
-                //send back an error to the user
-                const err = new Error("invalid target user id");
-                next(err);
-            }
-        }else{
-            //send back an error to the user
-            const err = new Error("target user not found");
-            next(err);
-        }
-    })
-
-    //socket io middleware for getting the room id
-    io.use(async (socket,next)=>{
-        const targetUserId = socket.data.targetUserId;
-        const clientID = socket.data.userID;
-        
-        //get and join the room id
-        let {roomID,errorMessage} = await database.getChatRoom(clientID,targetUserId);
-
-        if (errorMessage){
-            next (errorMessage);
-        }else{
-            socket.data.roomID = roomID;
-            next();
-        }
-
-    })
-
     //setup the socketio events
     io.on('connection', async (client) => {
         const clientID = client.data.userID;
-        const roomID = client.data.roomID;
+        let room = "";
 
-        client.join(roomID);
-
-        console.log("Server: client with the id "+ clientID +" connected to room "+ roomID);
+        console.log("Server: client connected with the id "+ clientID);
         
         client.on("disconnect", () => {
             console.log("Server: Client "+ clientID +" disconnected");
         });
-        client.on("ping",()=>{
-            client.emit("pong");
-            console.log("client pinged");
-        })
+        client.on("changeRoom", async (targetUserId)=>{
+            //gets the unique room for both users
+            let {roomID,errorMessage} = await database.getChatRoom(clientID,targetUserId);
+            if (errorMessage){
+                //in case of an error send it to the client
+                client.emit("Error",errorMessage);
+            }else{
+                //if everything went fine then change the room of the client
+                room = roomID;
+                client.join(room);
+                console.log(clientID + " connecting to room "+room);
+            }
+        });
     });
 }
 

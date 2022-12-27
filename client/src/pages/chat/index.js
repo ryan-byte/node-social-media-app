@@ -9,10 +9,21 @@ import ErrorOutput from "../../components/output/ErrorOutput";
 export default function Chat(){
     const [socket,setSocket] = useState(undefined);
     const [error,setError] = useState(undefined);
+    
+
+    /**
+     * //join different room if the socket already open (to avoid disconnecting and connecting to another socket)
+     * @param {Object} targetUserId 
+     */
+    function changeRoom(targetUserId){
+        if (socket){
+            socket.emit("changeRoom",targetUserId)
+        }
+    }
 
     useEffect(()=>{
-        let userid = "6392249e96dab8f6d1d0446a"
-        const newSocket = io(`?targetUserId=${userid}`);
+        //create new socket
+        const newSocket = io(`?targetUserId=6392249e96dab8f6d1d0446a`);
         setSocket(newSocket);
 
         newSocket.on("connect",()=>{
@@ -25,26 +36,27 @@ export default function Chat(){
         newSocket.on("connect_error", (err) => {
             if (err.data){
                 //show an error if there is something wrong with the cookie credentials
-                console.error(err.message + ": " + err.data.details);
                 setError(err.message + ": " + err.data.details);
             }else{
-                console.error(err.message);
                 setError(err.message);
             }
         });
-
+        newSocket.on("Error",(err)=>{
+            setError(err);
+        })
         return ()=>{
             newSocket.off("connect");
             newSocket.off("disconnect");
+            newSocket.off("connect_error");
+            newSocket.off("Error");
             newSocket.close();
         }
-
     }, [setSocket]);
 
     return (
         <div>
             {error && <ErrorOutput message={error}/>}
-            {socket && <ChatUI />}
+            <ChatUI changeRoom={changeRoom}/>
         </div>
     )
 }
