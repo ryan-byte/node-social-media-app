@@ -1,27 +1,33 @@
 import empty_profile from "../../assets/images/emptyProfile.png";
 import { GetFriends } from "../../utils/FriendsObject";
 import {useState,useEffect} from "react";
+import MessageComponent from "./messageComponent";
 
-export default function ChatUI({changeRoom}){
+
+export default function ChatUI({changeRoom,send_message_socket,messageArr,setMessageArr}){
     const [friends,setFriends] = useState(undefined);
     const [activeUser,setActiveUser] = useState(null);
+    const [message, setMessage] = useState("");
 
+    
     function changeTargetUser(id){
-        //set the active user for the user feedback
+        //dont change target user if it is already active
         if (id !== activeUser){
+            //set the active user for the user feedback
             setActiveUser(id);
             //set the active user for the socket to change rooms
             changeRoom(id);
+            //empty the chat
+            setMessageArr([]);
         }
     }
-
     function renderFriends(friends){
         let elementsArray = [];
         for (const id in friends){
             elementsArray.push(
                 <div 
                 className={activeUser === id ? "chat-user-holder active" : "chat-user-holder"}
-                onClick={(ev)=>changeTargetUser(id)}
+                onClick={()=>changeTargetUser(id)}
                 key={id} > 
                     <img 
                         className="user-post-profile-image invitation-user-link" 
@@ -35,10 +41,17 @@ export default function ChatUI({changeRoom}){
         }
         return elementsArray;
     }
-
+    
+    function onMessageSubmit(ev){
+        ev.preventDefault();
+        if (message !== ""){
+            send_message_socket(message);
+            setMessage("");
+        }
+    }
 
     useEffect(()=>{
-        setFriends(GetFriends)
+        setFriends(GetFriends())
     }, [])
     
 
@@ -48,36 +61,22 @@ export default function ChatUI({changeRoom}){
                 {friends && renderFriends(friends.ids)}
             </div>
 
-
-            <div className="chat-messages-side">
-                <div className="chat-all-messages-holder">
-                    <div className="chat-message-holder">
-                        <div className="chat-message-currentUser">
-                            i am the current user
-                        </div>
+            {
+                activeUser &&
+                <div className="chat-messages-side">
+                    <div className="chat-all-messages-holder">
+                        {
+                            messageArr.map(({message,type},id)=>{
+                                return (<MessageComponent key={id} message={message} type={type}/>)
+                            })
+                        }
                     </div>
-                    <div className="chat-message-holder">
-                        <div className="chat-message-otherUser">
-                            i am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current user
-                        </div>
-                    </div>
-                    <div className="chat-message-holder">
-                        <div className="chat-message-currentUser">
-                            i am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current user
-                        </div>
-                    </div>
-                    <div className="chat-message-holder">
-                        <div className="chat-message-currentUser">
-                            i am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current useri am the current user
-                        </div>
-                    </div>
+                    <form onSubmit={onMessageSubmit} className="chat-input-holder">
+                        <input value = {message} onChange={(ev)=>setMessage(ev.target.value)} type="text" className="chat-input-text" placeholder="Type your message here" />
+                        <input type="submit" className="chat-input-button" value="Send" />
+                    </form>
                 </div>
-                
-                <div className="chat-input-holder">
-                    <input type="text" className="chat-input-text" placeholder="Type your message here" />
-                    <input type="submit" className="chat-input-button" value="Send" />
-                </div>
-            </div>
+            }
 
         </div>
     )

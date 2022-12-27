@@ -9,10 +9,32 @@ import ErrorOutput from "../../components/output/ErrorOutput";
 export default function Chat(){
     const [socket,setSocket] = useState(undefined);
     const [error,setError] = useState(undefined);
+    const [messageArr,setMessageArr] = useState([]);
+
+    //setup messages functions
+    function add_sendMessage_UI(message){
+        setMessageArr([...messageArr, {message,type:"send"}]);
+    }
+    function add_receivedMessage_UI(message){
+        //the setMessageArr is written this way because weird behavior happens in useEffect hook 
+        //when writing it the old way (you can also see a warning in react when writing it in the old way)
+        //old way:  setMessageArr([...messageArr, {message,type:"receive"}]);
+        setMessageArr((oldArr) => [...oldArr, {message,type:"receive"}]);
+    }
+    /**
+     * sends the message to the server and adds the new message to the client UI
+     * @param {*} message 
+     */
+    function send_message_socket(message){
+        if (socket){
+            socket.emit("send_message",message);
+            add_sendMessage_UI(message);
+        }
+    }
     
 
     /**
-     * //join different room if the socket already open (to avoid disconnecting and connecting to another socket)
+     * join different room if the socket already open (to avoid disconnecting and connecting to another socket)
      * @param {Object} targetUserId 
      */
     function changeRoom(targetUserId){
@@ -21,9 +43,10 @@ export default function Chat(){
         }
     }
 
+
     useEffect(()=>{
         //create new socket
-        const newSocket = io(`?targetUserId=6392249e96dab8f6d1d0446a`);
+        const newSocket = io();
         setSocket(newSocket);
 
         newSocket.on("connect",()=>{
@@ -44,11 +67,16 @@ export default function Chat(){
         newSocket.on("Error",(err)=>{
             setError(err);
         })
+        //messages events
+        newSocket.on("receive_message",(message)=>{
+            add_receivedMessage_UI(message);
+        });
         return ()=>{
             newSocket.off("connect");
             newSocket.off("disconnect");
             newSocket.off("connect_error");
             newSocket.off("Error");
+            newSocket.off("receive_message");
             newSocket.close();
         }
     }, [setSocket]);
@@ -56,7 +84,11 @@ export default function Chat(){
     return (
         <div>
             {error && <ErrorOutput message={error}/>}
-            <ChatUI changeRoom={changeRoom}/>
+            <ChatUI 
+                changeRoom={changeRoom} 
+                send_message_socket={send_message_socket} 
+                messageArr={messageArr}
+                setMessageArr={setMessageArr}/>
         </div>
     )
 }

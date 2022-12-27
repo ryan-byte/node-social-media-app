@@ -36,10 +36,10 @@ function Chat(server){
         let room = "";
 
         console.log("Server: client connected with the id "+ clientID);
-        
         client.on("disconnect", () => {
             console.log("Server: Client "+ clientID +" disconnected");
         });
+        //change user room event
         client.on("changeRoom", async (targetUserId)=>{
             //gets the unique room for both users
             let {roomID,errorMessage} = await database.getChatRoom(clientID,targetUserId);
@@ -48,11 +48,17 @@ function Chat(server){
                 client.emit("Error",errorMessage);
             }else{
                 //if everything went fine then change the room of the client
+                if (room !== ""){
+                    client.leave(room);
+                }
                 room = roomID;
                 client.join(room);
-                console.log(clientID + " connecting to room "+room);
             }
         });
+        //messages events
+        client.on("send_message",(message)=>{
+            client.to(room).emit("receive_message",message);
+        })
     });
 }
 
