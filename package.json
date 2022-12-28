@@ -9,7 +9,7 @@
     "server-dev": "npm run dev --prefix server",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
-    "install-modules": "concurrently \"npm ci\" \"npm ci --prefix client\" \"npm ci --prefix server\"",
+    "install-modules": "concurrently \"npm install\" \"npm install --prefix client\" \"npm install --prefix server\"",
     "outdated-modules": "npm outdated && npm outdated --prefix client && npm outdated --prefix server"
   },
   "repository": {

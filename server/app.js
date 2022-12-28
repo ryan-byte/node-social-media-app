@@ -1,7 +1,7 @@
 
 //setup
 const rootDir = require('path').resolve('./');
-require("dotenv").config({path:rootDir+"/config.env"});
+require("dotenv").config();
 
 const express = require("express");
 const routes = require("./serverRoutes/routes");

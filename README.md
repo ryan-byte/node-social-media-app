@@ -1,18 +1,13 @@
 # Social Media App
 - Still in development.
 
-### config file:
-- Add `config.env` file to the server folder, then add the following:
-```
-jwtSecretKey = "<secret string>"
-PORT = <integer>
-mongodbURL = "<mongodb connect url>"
-```
+### Setup:
+1. inside Server Folder Create a `.env` using template from `.env.example` .
 
 ### how to run the project:
 - Install the project modules by running the following commands on the root of the project:
 ```
-npm ci
+npm install
 npm run install-modules
 ```
 
