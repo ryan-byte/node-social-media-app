@@ -8,7 +8,6 @@ export default function ChatUI({changeRoom,send_message_socket,messageArr,setMes
     const [friends,setFriends] = useState(undefined);
     const [activeUser,setActiveUser] = useState(null);
     const [message, setMessage] = useState("");
-
     
     function changeTargetUser(id){
         //dont change target user if it is already active
@@ -51,7 +50,7 @@ export default function ChatUI({changeRoom,send_message_socket,messageArr,setMes
     }
 
     useEffect(()=>{
-        setFriends(GetFriends())
+        setFriends(GetFriends());
     }, [])
     
 
@@ -64,7 +63,7 @@ export default function ChatUI({changeRoom,send_message_socket,messageArr,setMes
             {
                 activeUser &&
                 <div className="chat-messages-side">
-                    <div className="chat-all-messages-holder">
+                    <div id="messages" className="chat-all-messages-holder">
                         {
                             messageArr.map(({message,type},id)=>{
                                 return (<MessageComponent key={id} message={message} type={type}/>)

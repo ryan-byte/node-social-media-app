@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 /**
  * simple jsx message component that will show the message as either sent or received.
@@ -11,9 +11,9 @@ function MessageComponent({message,type}){
     return (
         <div>
             {
-                type === "send" ? 
-                create_sendMessageUI(message):
-                create_receiveMessageUI(message)
+                type === "send" 
+                ? <CreateSendMessageUI message={message} />
+                : <CreateReceiveMessageUI message={message} />
             }
         </div>
     )
@@ -23,7 +23,11 @@ function MessageComponent({message,type}){
 export default memo(MessageComponent)
 
 //static functions
-function create_sendMessageUI(message){
+function CreateSendMessageUI({message}){
+    useEffect(()=>{
+        const messages = document.getElementById("messages");
+        scrollDown(messages);
+    })
     return (
         <div className="chat-message-holder">
             <div className="chat-message-currentUser">
@@ -32,7 +36,14 @@ function create_sendMessageUI(message){
         </div>
     )
 }
-function create_receiveMessageUI(message){
+function CreateReceiveMessageUI({message}){
+    //when receiving messages scroll down only if the user is down
+    useEffect(()=>{
+        const messages = document.getElementById("messages");
+        if (messages.offsetHeight + messages.scrollTop >= messages.scrollHeight - 100){
+            scrollDown(messages);
+        }
+    })
     return (
         <div className="chat-message-holder">
             <div className="chat-message-otherUser">
@@ -40,4 +51,8 @@ function create_receiveMessageUI(message){
             </div>
         </div>
     )
+}
+
+function scrollDown(messages){
+    messages.scrollTop = messages.scrollHeight;
 }
