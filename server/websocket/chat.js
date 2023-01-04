@@ -40,7 +40,7 @@ function Chat(server){
             console.log("Server: Client "+ clientID +" disconnected");
         });
         //change user room event
-        client.on("changeRoom", async (targetUserId)=>{
+        client.on("changeRoom", async(targetUserId)=>{
             //gets the unique room for both users
             let {roomID,errorMessage} = await database.getChatRoom(clientID,targetUserId);
             if (errorMessage){
@@ -56,8 +56,15 @@ function Chat(server){
             }
         });
         //messages events
-        client.on("send_message",(message)=>{
-            client.to(room).emit("receive_message",message);
+        client.on("send_message", async(message)=>{
+            let validIds = await database.isValidID(room) && await database.isValidID(clientID);
+            
+            if (validIds){
+                //save the message
+                database.saveChatMessage(clientID,room,message);
+                //send message to everyone else in the room
+                client.to(room).emit("receive_message",message);
+            }
         })
     });
 }

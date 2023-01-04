@@ -9,8 +9,13 @@ const db = client.db("social-media-app-database");
 const usersCollection = db.collection("users");
 const postsCollection = db.collection("posts");
 const chatRoomCollection = db.collection("chat_room");
+const chatMessagesCollection = db.collection("chat_messages");
 
-
+/**
+ * checks if the id is a valid ObjectId
+ * @param {String} id 
+ * @returns Boolean
+ */
 async function isValidID(id){
     return ObjectId.isValid(id);
 }
@@ -32,7 +37,7 @@ async function userExists(userID){
         if(error instanceof BSONTypeError){
             return false;
         }
-        console.error("\x1b[31m" + "error from database > getUserProfileById: \n"+ "\x1b[0m" + error.message);
+        console.error("\x1b[31m" + "error from database > userExists: \n"+ "\x1b[0m" + error.message);
         return false;
     }
 }
@@ -337,7 +342,7 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
         if(error instanceof BSONTypeError){
             return {status:400};
         }
-        console.error("\x1b[31m" + "error from database > createPost: \n"+ "\x1b[0m" + error.message);
+        console.error("\x1b[31m" + "error from database > getPosts: \n"+ "\x1b[0m" + error.message);
         return {status:502};
     }
 }
@@ -510,7 +515,7 @@ async function acceptInvitation(currentUserID,acceptedUserID){
         return {status:200};
 
     } catch (error) {
-        console.error("\x1b[31m" + "error from database > acceptInvitation: \n"+ "\x1b[0m" + error.message);
+        console.error("\x1b[31m" + "error from database > declineInvitation: \n"+ "\x1b[0m" + error.message);
         return {status:502};
     }    
 }
@@ -560,9 +565,29 @@ async function getChatRoom(user1_ID,user2_ID){
 
 }
 
+/**
+ * saves chat message
+ * @param {String} sender 
+ * @param {String} room 
+ * @param {String} message 
+ * @returns a status code (200 for sucess) (502 for an error)
+ */
+async function saveChatMessage(sender,room,message){
+    try {
+        const timeStamp = Math.floor(Date.now() / 1000);
+        sender = new ObjectId(sender); 
+        room = new ObjectId(room); 
+        chatMessagesCollection.insertOne({sender,room,message,timeStamp});
+        return {status:200};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > saveChatMessage: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }   
+}
+
 module.exports = {isValidID,
                 userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
                 sendInvitationRequest,acceptInvitation,declineInvitation,
-                getChatRoom};
+                getChatRoom,saveChatMessage};
