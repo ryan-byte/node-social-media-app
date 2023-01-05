@@ -2,16 +2,19 @@ import "../../assets/styles/chat.css"
 
 import io from "socket.io-client";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 import ChatUI from "./chatUI";
 import ErrorOutput from "../../components/output/ErrorOutput";
-import { getLoginCookieData } from "../../utils/accessPage";
+import { getLoginCookieData, restricted_To_unLoggedUsers } from "../../utils/accessPage";
 
 export default function Chat(){
     const [socket,setSocket] = useState(undefined);
     const [error,setError] = useState(undefined);
     const [messageArr,setMessageArr] = useState([]);
     const [userID] = useState(getLoginCookieData().userID);
+    
+    const navigate = useNavigate();
 
     //setup messages functions
     function add_sendMessage_UI(message){
@@ -45,6 +48,8 @@ export default function Chat(){
 
 
     useEffect(()=>{
+        //restrict the access to this page
+        restricted_To_unLoggedUsers(navigate);
         //create new socket
         const newSocket = io();
         setSocket(newSocket);
@@ -91,7 +96,7 @@ export default function Chat(){
             newSocket.off("loading_messages");
             newSocket.close();
         }
-    }, [setSocket,userID]);
+    }, [setSocket,userID,navigate]);
 
     return (
         <div>
