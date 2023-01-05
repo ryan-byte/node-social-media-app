@@ -53,6 +53,10 @@ function Chat(server){
                 }
                 room = roomID;
                 client.join(room);
+                //load the room messages
+                const {messageArr} = await database.loadChatMessages(room);
+                //send the loaded messages to the client
+                if (messageArr) client.emit("loading_messages",messageArr); 
             }
         });
         //messages events

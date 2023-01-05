@@ -5,22 +5,22 @@ import {useEffect, useState} from "react";
 
 import ChatUI from "./chatUI";
 import ErrorOutput from "../../components/output/ErrorOutput";
+import { getLoginCookieData } from "../../utils/accessPage";
 
 export default function Chat(){
     const [socket,setSocket] = useState(undefined);
     const [error,setError] = useState(undefined);
     const [messageArr,setMessageArr] = useState([]);
+    const [userID] = useState(getLoginCookieData().userID);
 
     //setup messages functions
     function add_sendMessage_UI(message){
-        setMessageArr([...messageArr, {message,type:"send"}]);
+        setMessageArr((oldArr) => [...oldArr, {message,type:"send"}]);
     }
     function add_receivedMessage_UI(message){
-        //the setMessageArr is written this way because weird behavior happens in useEffect hook 
-        //when writing it the old way (you can also see a warning in react when writing it in the old way)
-        //old way:  setMessageArr([...messageArr, {message,type:"receive"}]);
         setMessageArr((oldArr) => [...oldArr, {message,type:"receive"}]);
     }
+
     /**
      * sends the message to the server and adds the new message to the client UI
      * @param {*} message 
@@ -71,15 +71,27 @@ export default function Chat(){
         newSocket.on("receive_message",(message)=>{
             add_receivedMessage_UI(message);
         });
+        //loading messages
+        newSocket.on("loading_messages",(loaded_messageArr)=>{
+            loaded_messageArr.forEach(messageItem => {
+                if (messageItem.sender === userID){
+                    add_sendMessage_UI(messageItem.message);
+                }else{
+                    add_receivedMessage_UI(messageItem.message);
+                }
+            });
+        });
+
         return ()=>{
             newSocket.off("connect");
             newSocket.off("disconnect");
             newSocket.off("connect_error");
             newSocket.off("Error");
             newSocket.off("receive_message");
+            newSocket.off("loading_messages");
             newSocket.close();
         }
-    }, [setSocket]);
+    }, [setSocket,userID]);
 
     return (
         <div>

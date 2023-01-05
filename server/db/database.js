@@ -585,9 +585,29 @@ async function saveChatMessage(sender,room,message){
     }   
 }
 
+/**
+ * will load the latest 20 messages from a room
+ * @param {String} room
+ * @returns on success {status:200, messageArr} on error {status:502}  
+ */
+async function loadChatMessages(room){
+    try {
+        room = new ObjectId(room); 
+        const messageArr = await chatMessagesCollection.find({room})
+                            .sort({timeStamp:1})
+                            .project({sender:1,message:1,timeStamp:1,_id:0})
+                            .toArray();
+
+        return {status:200, messageArr};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > loadChatMessages: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
 module.exports = {isValidID,
                 userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
                 sendInvitationRequest,acceptInvitation,declineInvitation,
-                getChatRoom,saveChatMessage};
+                getChatRoom,saveChatMessage,loadChatMessages};
