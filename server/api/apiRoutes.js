@@ -22,7 +22,7 @@ async function getUserProfileData(req,res){
 /**
  * update the user profile details, must pass the updated details in the body as x-www-form-urlencoded.
  * 
- *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ *      *     'Note: This route must be called after a verification middleware that will verify if the user authorized '
  * @param {Required} req 
  * @param {Required} res 
 */
@@ -53,7 +53,7 @@ async function updateUserProfileDetails(req,res){
 /**
  * create a user post in the database then returns a status code.
  * 
- *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ *      *     'Note: This route must be called after a verification middleware that will verify if the user authorized '
  * @param {Required} req 
  * @param {Required} res 
 */
@@ -108,7 +108,7 @@ async function getUserPosts(req,res){
 /**
  * change the username of a user by getting his id from the stored cookie then update the username in the database.
  * 
- *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ *      *     'Note: This route must be called after a verification middleware that will verify if the user authorized '
  * @param {Required} req 
  * @param {Required} res 
  */
@@ -142,7 +142,7 @@ async function updateUsername(req,res){
  * 
  * requires (oldPassword and password) to be sent in the body as form urlencoded 
  * 
- *     'Note: This route must be called after a verification middleware that will verify if the user is legit '
+ *      *     'Note: This route must be called after a verification middleware that will verify if the user authorized '
  * @param {Required} req 
  * @param {Required} res 
  */
@@ -211,9 +211,38 @@ async function searchUser(req,res){
     }
 }
 
+/**
+ * requires (friendsArr_id) to be sent in the body as form urlencoded 
+ * 
+ *      'Note: This route must be called after a verification middleware that will verify if the user authorized '
+ *
+ * @param {Required} req 
+ * @param {Required} res 
+ */
+async function getFriendsPosts(req,res){
+    //must be called after the jwt verification middleware which should send the userID stored in the 
+    //cookie 
+
+    //get friends list
+    const {friendsArr_id} = req.body;
+    let badParams = friendsArr_id == undefined;
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    //get the data from the database
+    const {status,output} = await database.getFriendsPosts(friendsArr_id);
+    //send back the data to the client
+    if (status === 200){
+        res.status(status).json(output);
+        return;
+    }
+    res.sendStatus(status);
+}
+
 
 
 module.exports = {getUserProfileData,updateUserProfileDetails,
                 createUserPost,getUserPosts,
                 updateUsername,updatePassword,
-                searchUser};
+                searchUser,getFriendsPosts};

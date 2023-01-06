@@ -25,6 +25,8 @@ app.put("/api/user/profile/details",middleware.loggedUsersAccess,apiRoutes.updat
 app.put("/api/user/setting/username",middleware.loggedUsersAccess,apiRoutes.updateUsername);
 app.put("/api/user/setting/password",middleware.loggedUsersAccess,apiRoutes.updatePassword);
 
+app.get("/api/user/friends/posts",middleware.loggedUsersAccess,apiRoutes.getFriendsPosts);
+
 app.post("/api/user/post",middleware.loggedUsersAccess,apiRoutes.createUserPost);
 
 app.get("/api/posts/:userID",apiRoutes.getUserPosts);

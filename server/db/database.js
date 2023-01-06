@@ -331,18 +331,29 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
 /**
  * get all the posts of a specific user
  * @param {String} userID 
- * @param {String} text 
- * @returns status code (201/400/502)
+ * @returns status code (200/502)
  */
  async function getPosts(userID){
     try {
         let output = await postsCollection.find({userID}).sort({ timeStamp: -1}).toArray();
         return {status:200,output};
     } catch (error) {
-        if(error instanceof BSONTypeError){
-            return {status:400};
-        }
         console.error("\x1b[31m" + "error from database > getPosts: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
+/**
+ * get friends posts in order of the timestamp
+ * @param {String} friendsArr_id 
+ * @returns status code (200/502)
+ */
+async function getFriendsPosts(friendsArr_id){
+    try {
+        let output = await postsCollection.find({userID: {$in: friendsArr_id}}).sort({ timeStamp: -1}).toArray();
+        return {status:200,output};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > getFriendsPosts: \n"+ "\x1b[0m" + error.message);
         return {status:502};
     }
 }
@@ -605,9 +616,12 @@ async function loadChatMessages(room){
     }
 }
 
+
+
+
 module.exports = {isValidID,
                 userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
-                createPost,getPosts,updateUsername,updateUserPassword,verifyUserPassword,
+                createPost,getPosts,getFriendsPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,
                 sendInvitationRequest,acceptInvitation,declineInvitation,
-                getChatRoom,saveChatMessage,loadChatMessages};
+                getChatRoom,saveChatMessage,loadChatMessages,};
