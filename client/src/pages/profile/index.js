@@ -10,7 +10,7 @@ import Loading from "../../components/feedback/Loading";
 import ErrorOutput from "../../components/output/ErrorOutput";
 import UserImages from "./userImages";
 import UserContent from "./userContent";
-import UserPublish from "./userPublish";
+import UserPublish from "../../components/form/userPublish";
 import Interact from "./interact";
 
 import { GetFriends } from "../../utils/FriendsObject"

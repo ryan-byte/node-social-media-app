@@ -222,16 +222,32 @@ async function searchUser(req,res){
 async function getFriendsPosts(req,res){
     //must be called after the jwt verification middleware which should send the userID stored in the 
     //cookie 
-
+    let userID = res.locals.userID;
     //get friends list
-    const {friendsArr_id} = req.body;
+    let {friendsArr_id} = req.query;
+
+    //check if there is a bad params
     let badParams = friendsArr_id == undefined;
     if (badParams){
         res.sendStatus(400);
         return;
     }
+
+    //parse the string to an object
+    if (typeof(friendsArr_id) === "string"){
+        try{
+            friendsArr_id = JSON.parse(friendsArr_id);
+        }catch (err){
+            res.sendStatus(400);
+            return;
+        }
+    }
+
+    //adds the current userID to get all the friends posts including the current user posts
+    friendsArr_id.push(userID);
     //get the data from the database
     const {status,output} = await database.getFriendsPosts(friendsArr_id);
+    
     //send back the data to the client
     if (status === 200){
         res.status(status).json(output);

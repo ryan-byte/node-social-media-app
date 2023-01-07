@@ -11,7 +11,6 @@ import { ReactComponent as Share } from  '../../assets/svg/share.svg';
 export default memo(UserPost);
 
 function UserPost({postData,username}){
-
     return(
         <div>
             <div className="user-post-container">
