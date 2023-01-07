@@ -21,7 +21,7 @@
     font-size: x-large;
 }
 .friends-user-holder:hover{
-    background-color: var(--color-link-hover);
+    backdrop-filter: brightness(80%);
     cursor: pointer;
 }
 .friends-user-link:hover{

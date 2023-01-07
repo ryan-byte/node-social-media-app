@@ -25,21 +25,16 @@
     
     display: block;
     color: var(--color-post-outer-text);
-    fill: black;
     padding: 16px;
     text-decoration: none;
     border-bottom: solid 1px black;
 }
 .chat-user-holder:hover:not(.active){
-    background-color: var(--color-link-hover);
-    color: white;
-    fill: white;
+    backdrop-filter: brightness(80%);
     cursor: pointer;
 }
 .chat-user-holder.active {
-    background-color: var(--color-active-link);
-    color: white;
-    fill: white;
+    backdrop-filter: brightness(120%);
 }
 .chat-messages-side{
     display: flex;

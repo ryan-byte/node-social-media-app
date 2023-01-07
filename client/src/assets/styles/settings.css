@@ -21,14 +21,14 @@
 
 /* Active/current link */
 .sidebar a.active {
-  background-color: var(--color-active-link);
+  backdrop-filter: brightness(120%);
   color: white;
   fill: white;
 }
 
 /* Links on mouse-over */
 .sidebar a:hover:not(.active) {
-  background-color: var(--color-link-hover);
+  backdrop-filter: brightness(80%);
   color: white;
   fill: white;
 }
@@ -89,7 +89,7 @@ div.content {
   color: var(--color-background-text);
 }
 .setting-btn-custom-color:hover{
-  background-color: var(--color-Background);
+  backdrop-filter: brightness(60%);
 }
 .setting-btn-custom-color:active{
   background-color: var(--color-Background) !important;

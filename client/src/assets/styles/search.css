@@ -27,7 +27,7 @@
     font-size: x-large;
 }
 .search-user-holder:hover{
-    background-color: var(--color-link-hover);
+    backdrop-filter: brightness(80%);
     cursor: pointer;
 }
 @media only screen and (max-width: 800px){

@@ -21,7 +21,8 @@
     color: var(--color-background-text);
 }
 .navbar-nav .show > .nav-link, .navbar-nav .nav-link.active{
-    color: var(--color-active-link);
+    color: var(--color-background-text);
+    filter: brightness(75%);
 }
 
 .navbar-profile-pic{

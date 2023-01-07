@@ -1,9 +1,7 @@
 :root {
     --primary1: #C3073F;
-    --primary2: #950740;
     --primary3: #ac0045b4;
     --primary4: #6F2232;
-    --primary5: #6e0730;
     --secondary1: #0C72CF;
     --secondary2: #E93B3B;
     --color1: #FFFFFF;
@@ -17,7 +15,6 @@
 
 
 :root{
-    --color-input-text: var(--color1);
     --color-post-inner-text: var(--color1);
     --color-chat-input-submit-fg: var(--color1);
     --color-chat-currentUser-text-fg: var(--color1);
@@ -35,11 +32,9 @@
     
 
     --color-background-text: var(--primary1);
-    --color-active-link: var(--primary2);
     --color-chat-input-submit-bg: var(--primary3);
     --color-chat-currentUser-text-bg: var(--primary3);
     --color-post-background: var(--primary4);
-    --color-link-hover: var(--primary5);
 
     --color-invitation-accept: var(--secondary1);
     --color-invitation-decline: var(--secondary2);
