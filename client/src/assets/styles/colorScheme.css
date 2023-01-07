@@ -1,32 +1,47 @@
 :root {
-    --color-navbar-Background: #26262b; 
-    --color-navbar-input-Background: #414149; 
-    --color-navbar-input-front: #dbdbdb; 
+    --primary1: #C3073F;
+    --primary2: #950740;
+    --primary3: #ac0045b4;
+    --primary4: #6F2232;
+    --primary5: #6e0730;
+    --secondary1: #0C72CF;
+    --secondary2: #E93B3B;
+    --color1: #FFFFFF;
+    --color2: #dbdbdb;
+    --color3: #BFBFBF;
+    --color4: #4E4E50;
+    --color5: #26262b;
+    --color6: #1A1A1D;
+    --color7: #000000;
+}
 
-    --color-Background: #1A1A1D;
-    --color-background-text: #C3073F;
-    --color-post-background: #6F2232;
-    --color-post-outer-text: #000000;
-    --color-post-inner-text: #FFFFFF;
-    --color-input-background: #4E4E50;
-    --color-input-text: #FFFFFF;
-    
-    --color-empty-background-profile:#BFBFBF;
-    --color-active-link: #950740;
-    --color-link-hover: #6e0730;
 
-    --color-invitation-accept:#0C72CF;
-    --color-invitation-decline:#E93B3B;
+:root{
+    --color-input-text: var(--color1);
+    --color-post-inner-text: var(--color1);
+    --color-chat-input-submit-fg: var(--color1);
+    --color-chat-currentUser-text-fg: var(--color1);
+    --color-navbar-input-front: var(--color2); 
+    --color-chat-input-text-bg: var(--color2);
+    --color-chat-otherUser-text-bg: var(--color2);
+    --color-empty-background-profile: var(--color3);
+    --color-input-background: var(--color4);
+    --color-navbar-input-Background: var(--color4); 
+    --color-navbar-Background: var(--color5); 
+    --color-Background: var(--color6);
+    --color-post-outer-text: var(--color7);
+    --color-chat-input-text-fg: var(--color7);
+    --color-chat-otherUser-text-fg: var(--color7);
+    
 
-    --color-chat-input-text-bg: #dbdbdb;
-    --color-chat-input-text-fg: #000000;
-    
-    --color-chat-input-submit-bg: #ac0045b4;
-    --color-chat-input-submit-fg: #FFFFFF;
-    
-    --color-chat-currentUser-text-bg: #ac0045b4;
-    --color-chat-currentUser-text-fg: #FFFFFF;
-    
-    --color-chat-otherUser-text-bg: #dbdbdb;
-    --color-chat-otherUser-text-fg: #000000;
+    --color-background-text: var(--primary1);
+    --color-active-link: var(--primary2);
+    --color-chat-input-submit-bg: var(--primary3);
+    --color-chat-currentUser-text-bg: var(--primary3);
+    --color-post-background: var(--primary4);
+    --color-link-hover: var(--primary5);
+
+    --color-invitation-accept: var(--secondary1);
+    --color-invitation-decline: var(--secondary2);
+
 }
