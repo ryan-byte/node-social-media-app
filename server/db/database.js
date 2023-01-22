@@ -355,7 +355,9 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
 async function createPost(userID,text){
     try {
         let timeStamp = Math.floor(Date.now() / 1000);
-        await postsCollection.insertOne({text,userID,timeStamp});
+        let likes = {total:0,users:{}}
+        let comments = {total:0,usersComments:{}}
+        await postsCollection.insertOne({text,userID,likes,comments,timeStamp});
         return {status:201}
     } catch (error) {
         if(error instanceof BSONTypeError){

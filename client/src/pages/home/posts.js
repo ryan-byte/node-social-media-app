@@ -23,7 +23,7 @@ export default function Posts(){
                 (postsData && postsData.length === 0) 
                 &&
                 <h3 className="text-center"> 
-                    No publications available, invite more friends.
+                    No publications available.
                 </h3>
             }
             {
