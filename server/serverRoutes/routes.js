@@ -2,6 +2,9 @@ const database = require("../db/database");
 const hashPassword = require("../utils/hashPassword");
 const cookieManager = require("../utils/cookieManager");
 
+
+//signin /signup
+
 /**
  * a route for verifying if the given user credentials are true, 
  * if true then gives the client a login cookie.
@@ -81,6 +84,9 @@ function logout(req,res){
     res.sendStatus(200);
 }
 
+
+//invitations
+
 /**
  * 
  * requires (targetID) to be sent in the body as form urlencoded 
@@ -140,31 +146,6 @@ async function getUser_Invitations(req,res){
         return;
     }
     res.send(received_invitation);
-}
-
-/**
- * get the friends object of a user that will contain receivedInvitation/ sentInvitation/ friendsIds/ ...
- * 
- * @param {Required} req 
- * @param {Required} res 
- * @example
- * 'must be called after verifying the user'
- */
-async function getUser_Friends(req,res){
-    //get the current user id
-    let userID = res.locals.userID;
-    //get the received invitation of this user
-    let {friends: output} = await database.getUserFriendsDataById(userID);
-    //send the data to the client
-    if (output.status){
-        if (output.error){
-            res.status(output.status).send(output.error);
-            return;
-        }
-        res.sendStatus(output.status);
-        return;
-    }
-    res.send(output);
 }
 
 /**
@@ -229,6 +210,34 @@ async function accept_invitation(req,res){
         return;
     }
     res.sendStatus(status);
+}
+
+
+//friends
+
+/**
+ * get the friends object of a user that will contain receivedInvitation/ sentInvitation/ friendsIds/ ...
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * @example
+ * 'must be called after verifying the user'
+ */
+async function getUser_Friends(req,res){
+    //get the current user id
+    let userID = res.locals.userID;
+    //get the received invitation of this user
+    let {friends: output} = await database.getUserFriendsDataById(userID);
+    //send the data to the client
+    if (output.status){
+        if (output.error){
+            res.status(output.status).send(output.error);
+            return;
+        }
+        res.sendStatus(output.status);
+        return;
+    }
+    res.send(output);
 }
 
 module.exports = {userSignup,userSignin,logout,

@@ -2,6 +2,42 @@ const database = require("../db/database");
 const hashPassword = require("../utils/hashPassword");
 const cookieManager = require("../utils/cookieManager");
 
+
+/**
+ * finds users with a similar username
+ * 
+ * requires (username) to be sent in the body as form urlencoded 
+ * 
+ * @param {Required} req 
+ * @param {Required} res 
+ * @returns 
+ */
+ async function searchUser(req,res){
+    //get the userID from the requested param
+    let {username} = req.params;
+    let badParams = username == undefined ||
+                    username === ""||
+                    typeof username !== "string";
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    username = username.trim();
+    if (username.length === 0){
+        res.sendStatus(400);
+        return;
+    }
+    //get the users from the database
+    let {status,users} = await database.getUsersByName(username);
+    if (status === 200){
+        res.status(200).json(users);
+    }else{
+        res.sendStatus(status);
+    }
+}
+
+//user profile
+
 /**
  * get the user profile data from a given id. 
  * @param {Required} req 
@@ -47,61 +83,6 @@ async function updateUserProfileDetails(req,res){
     //update the data in the database
     let {status} = await database.updateProfileDetails(userID,aboutMe);
     //send back a status code
-    res.sendStatus(status);
-}
-
-/**
- * create a user post in the database then returns a status code.
- * 
- *      *     'Note: This route must be called after a verification middleware that will verify if the user authorized '
- * @param {Required} req 
- * @param {Required} res 
-*/
-async function createUserPost(req,res){
-    //must be called after the jwt verification middleware which should send the userID stored in the 
-    //cookie 
-    let userID = res.locals.userID;
-    let {text} = req.body;
-    if (text) text = text.trim();
-    let badParams = text == undefined ||
-                    text === ""||
-                    typeof text !== "string";
-    if (badParams){
-        res.sendStatus(400);
-        return;
-    }
-    if (text.length > 500){
-        res.sendStatus(400);
-        return;
-    }
-    //update the data in the database
-    let {status} = await database.createPost(userID,text);
-    //send back a status code
-    res.sendStatus(status);
-}
-
-/**
- * get all the posts of a user then return json and a status code
- * @param {Required} req 
- * @param {Required} res 
-*/
-async function getUserPosts(req,res){
-    //get the userID from the requested param
-    let {userID} = req.params;
-    let badParams = userID == undefined ||
-                    userID === ""||
-                    typeof userID !== "string";
-    if (badParams){
-        res.sendStatus(400);
-        return;
-    }
-    //update the data in the database
-    let {status,output} = await database.getPosts(userID);
-    //send back a status code
-    if (status === 200){
-        res.status(status).json(output);
-        return;
-    }
     res.sendStatus(status);
 }
 
@@ -178,38 +159,66 @@ async function updatePassword(req,res){
     res.sendStatus(status);
 }
 
+
+//user posts
+
 /**
- * finds users with a similar username
+ * create a user post in the database then returns a status code.
  * 
- * requires (username) to be sent in the body as form urlencoded 
- * 
+ *      *     'Note: This route must be called after a verification middleware that will verify if the user authorized '
  * @param {Required} req 
  * @param {Required} res 
- * @returns 
- */
-async function searchUser(req,res){
-    //get the userID from the requested param
-    let {username} = req.params;
-    let badParams = username == undefined ||
-                    username === ""||
-                    typeof username !== "string";
+*/
+async function createUserPost(req,res){
+    //must be called after the jwt verification middleware which should send the userID stored in the 
+    //cookie 
+    let userID = res.locals.userID;
+    let {text} = req.body;
+    if (text) text = text.trim();
+    let badParams = text == undefined ||
+                    text === ""||
+                    typeof text !== "string";
     if (badParams){
         res.sendStatus(400);
         return;
     }
-    username = username.trim();
-    if (username.length === 0){
+    if (text.length > 500){
         res.sendStatus(400);
         return;
     }
-    //get the users from the database
-    let {status,users} = await database.getUsersByName(username);
-    if (status === 200){
-        res.status(200).json(users);
-    }else{
-        res.sendStatus(status);
-    }
+    //update the data in the database
+    let {status} = await database.createPost(userID,text);
+    //send back a status code
+    res.sendStatus(status);
 }
+
+/**
+ * get all the posts of a user then return json and a status code
+ * @param {Required} req 
+ * @param {Required} res 
+*/
+async function getUserPosts(req,res){
+    //get the userID from the requested param
+    let {userID} = req.params;
+    let badParams = userID == undefined ||
+                    userID === ""||
+                    typeof userID !== "string";
+    if (badParams){
+        res.sendStatus(400);
+        return;
+    }
+    //update the data in the database
+    let {status,output} = await database.getPosts(userID);
+    //send back a status code
+    if (status === 200){
+        res.status(status).json(output);
+        return;
+    }
+    res.sendStatus(status);
+}
+
+
+//friends
 
 /**
  * requires (friendsArr_id) to be sent in the body as form urlencoded 

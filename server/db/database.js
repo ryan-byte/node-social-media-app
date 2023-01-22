@@ -43,6 +43,35 @@ async function userExists(userID){
 }
 
 /**
+ * updates the friends object inside a user document in the database
+ * 
+ * @param {Required} userID 
+ * @param {Required} newFriends 
+ */
+async function updateFriendsObject(userID,newFriends){
+    try {
+        let _id = new ObjectId(userID);
+        const filter = { _id };
+        const updateDoc = {
+            $set: {
+                "friends":newFriends
+            },
+        };
+        await usersCollection.updateOne(filter,updateDoc);
+        return {status:200};
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > updateFriendsObject: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
+
+//Get users
+
+/**
  * this function gets a user from the database that matches the given email.
  * 
  * @param {string} email required.
@@ -121,6 +150,9 @@ async function getUserFriendsDataById(id){
     }
 }
 
+
+//signin /singup
+
 /**
  * Checks if the given user credentions are right by hashing the password then compares it to the hash stored in the database.
  * 
@@ -152,6 +184,39 @@ async function userSignin(email,password){
 
     } catch (error) {
         console.error("\x1b[31m" + "error from database > userSignin: \n" + "\x1b[0m" + error.message);
+        return {status:500};
+    }
+}
+
+/**
+ * Add a user to the database.
+ * 
+ * @param {string} username required.
+ * @param {string} email required.
+ * @param {string} hashedPassword required.
+ * @param {string} hashSalt required: salt used to hash the password.
+ * @returns status code (201,409,500)
+ */
+async function userSignup(username,email,hashedPassword,hashSalt){
+    try {
+        //check if the user exists already
+        let userExist = await getUserByEmail(email);
+        if (userExist === null){
+            //user doesnt exist
+            //save his data
+            let details = {aboutMe:""};
+            let timeStamp = Math.floor(Date.now() / 1000);
+            let friends = {ids:{},total:0,received_invitation:{},sent_invitation:{}};
+            let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,details,friends,timeStamp})).insertedId.toString();
+            return {status:201,userID};
+        }else{
+            //throw an error if the get user has thrown an error
+            if (userExist.error !== undefined) return {status:500};
+            //user already exist
+            return {status:409};
+        }
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > userSignup: \n" + "\x1b[0m" + error.message);
         return {status:500};
     }
 }
@@ -195,38 +260,8 @@ async function verifyUserPassword(userID,password){
     }
 }
 
-/**
- * Add a user to the database.
- * 
- * @param {string} username required.
- * @param {string} email required.
- * @param {string} hashedPassword required.
- * @param {string} hashSalt required: salt used to hash the password.
- * @returns status code (201,409,500)
- */
-async function userSignup(username,email,hashedPassword,hashSalt){
-    try {
-        //check if the user exists already
-        let userExist = await getUserByEmail(email);
-        if (userExist === null){
-            //user doesnt exist
-            //save his data
-            let details = {aboutMe:""};
-            let timeStamp = Math.floor(Date.now() / 1000);
-            let friends = {ids:{},total:0,received_invitation:{},sent_invitation:{}};
-            let userID = (await usersCollection.insertOne({username,email,hashedPassword,hashSalt,details,friends,timeStamp})).insertedId.toString();
-            return {status:201,userID};
-        }else{
-            //throw an error if the get user has thrown an error
-            if (userExist.error !== undefined) return {status:500};
-            //user already exist
-            return {status:409};
-        }
-    } catch (error) {
-        console.error("\x1b[31m" + "error from database > userSignup: \n" + "\x1b[0m" + error.message);
-        return {status:500};
-    }
-}
+
+//user profile
 
 /**
  * updates the Details object saved with the given userID.
@@ -257,30 +292,10 @@ async function updateProfileDetails(userID,aboutMe){
 /**
  * create a new posts that will be saved with a userID.
  * @param {String} userID 
- * @param {String} text 
- * @returns status code (201/400/502)
- */
- async function createPost(userID,text){
-    try {
-        let timeStamp = Math.floor(Date.now() / 1000);
-        await postsCollection.insertOne({text,userID,timeStamp});
-        return {status:201}
-    } catch (error) {
-        if(error instanceof BSONTypeError){
-            return {status:400};
-        }
-        console.error("\x1b[31m" + "error from database > createPost: \n"+ "\x1b[0m" + error.message);
-        return {status:502};
-    }
-}
-
-/**
- * create a new posts that will be saved with a userID.
- * @param {String} userID 
  * @param {String} username 
  * @returns status code (200/400/502)
  */
- async function updateUsername(userID,username){
+async function updateUsername(userID,username){
     try {
         let _id = new ObjectId(userID);
         const filter = { _id };
@@ -328,12 +343,35 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
     }
 }
 
+
+//user posts
+
+/**
+ * create a new posts that will be saved with a userID.
+ * @param {String} userID 
+ * @param {String} text 
+ * @returns status code (201/400/502)
+ */
+async function createPost(userID,text){
+    try {
+        let timeStamp = Math.floor(Date.now() / 1000);
+        await postsCollection.insertOne({text,userID,timeStamp});
+        return {status:201}
+    } catch (error) {
+        if(error instanceof BSONTypeError){
+            return {status:400};
+        }
+        console.error("\x1b[31m" + "error from database > createPost: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
 /**
  * get all the posts of a specific user
  * @param {String} userID 
  * @returns status code (200/502)
  */
- async function getPosts(userID){
+async function getPosts(userID){
     try {
         let output = await postsCollection.find({userID}).sort({ timeStamp: -1}).toArray();
         return {status:200,output};
@@ -358,31 +396,8 @@ async function getFriendsPosts(friendsArr_id){
     }
 }
 
-/**
- * updates the friends object inside a user document in the database
- * 
- * @param {Required} userID 
- * @param {Required} newFriends 
- */
-async function updateFriendsObject(userID,newFriends){
-    try {
-        let _id = new ObjectId(userID);
-        const filter = { _id };
-        const updateDoc = {
-            $set: {
-                "friends":newFriends
-            },
-        };
-        await usersCollection.updateOne(filter,updateDoc);
-        return {status:200};
-    } catch (error) {
-        if(error instanceof BSONTypeError){
-            return {status:400};
-        }
-        console.error("\x1b[31m" + "error from database > updateFriendsObject: \n"+ "\x1b[0m" + error.message);
-        return {status:502};
-    }
-}
+
+//invitations
 
 /**
  * adds an invitation request to the target user and adds a sent invitation to the current user
@@ -500,7 +515,7 @@ async function acceptInvitation(currentUserID,acceptedUserID){
  * @param {Required} currentUserID 
  * @param {Required} declinedUserID 
  */
- async function declineInvitation(currentUserID,declinedUserID){
+async function declineInvitation(currentUserID,declinedUserID){
     try {
         //get the received invitations of the current user
         let {friends: currentUser_Friends} = await getUserFriendsDataById(currentUserID);
@@ -530,6 +545,9 @@ async function acceptInvitation(currentUserID,acceptedUserID){
         return {status:502};
     }    
 }
+
+
+//chat
 
 /**
  * gets a unique chat room id for 2 users.
@@ -619,9 +637,7 @@ async function loadChatMessages(room){
 
 
 
-module.exports = {isValidID,
-                userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
+module.exports = {isValidID,userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,getFriendsPosts,updateUsername,updateUserPassword,verifyUserPassword,
-                getUsersByName,
-                sendInvitationRequest,acceptInvitation,declineInvitation,
+                getUsersByName,sendInvitationRequest,acceptInvitation,declineInvitation,
                 getChatRoom,saveChatMessage,loadChatMessages,};
