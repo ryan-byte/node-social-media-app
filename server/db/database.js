@@ -637,9 +637,56 @@ async function loadChatMessages(room){
 }
 
 
+//post interaction
+
+/**
+ * revert the like in the database:
+ * if the user already liked the post then unlike it,
+ * otherwise then like it.
+ * @param {Object} userID 
+ * @param {Object} postID 
+ * @return {Object} {status} 
+ */
+async function likeAndUnlikePost(userID,postID){
+    try {
+        //get the post likes object
+        const filter = {_id : new ObjectId(postID)};
+        let output = await postsCollection.findOne(filter,{projection:{likes:1,_id:0}});
+        if (output == null || output.likes == null){
+            return {status:404}
+        }
+        let likes = output.likes;
+
+        //if the user is found then remove the user and decrease the total likes by 1
+        if (userID in likes.users){
+            delete likes.users[userID];
+            likes.total--;
+        }else{
+            //otherwise add the user and increase the total likes by 1
+            likes.users[userID] = 1;
+            likes.total++;
+        }
+
+        //update the likes object in the database
+        const updateDoc = {
+            $set: {
+                "likes":likes
+            },
+        };
+        await postsCollection.updateOne(filter,updateDoc);
+
+        //return success status code
+        return {status:200};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > likeAndUnlikePost: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+    
+}
 
 
 module.exports = {isValidID,userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,getFriendsPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,sendInvitationRequest,acceptInvitation,declineInvitation,
-                getChatRoom,saveChatMessage,loadChatMessages,};
+                getChatRoom,saveChatMessage,loadChatMessages,
+                likeAndUnlikePost};

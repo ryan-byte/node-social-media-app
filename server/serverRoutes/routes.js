@@ -11,6 +11,8 @@ const cookieManager = require("../utils/cookieManager");
  * @param {*} req 
  * @param {*} res 
  * @returns status code
+ * @example
+ * 'email' and 'password' must be sent from urlencoded form
  */
 async function userSignin(req,res){
     //must be called after a middleware that verify if the user is not logged in
@@ -40,6 +42,8 @@ async function userSignin(req,res){
  * @param {*} req 
  * @param {*} res 
  * @returns status code
+ * @example
+ * 'username', 'email' and 'password' must be sent from urlencoded form
  */
 async function userSignup(req,res){
     //must be called after a middleware that verify if the user is not logged in
@@ -94,6 +98,7 @@ function logout(req,res){
  * @param {Required} req 
  * @param {Required} res 
  * @example
+ * 'targetID' must be sent from urlencoded form
  * 'must be called after verifying the user'
  */
 async function sendInvitation(req,res){
@@ -154,6 +159,7 @@ async function getUser_Invitations(req,res){
  * @param {Required} req 
  * @param {Required} res 
  * @example
+ * 'accepted_userID' must be sent from urlencoded form
  * 'must be called after verifying the user'
  */
 async function accept_invitation(req,res){
@@ -186,6 +192,7 @@ async function accept_invitation(req,res){
  * @param {Required} req 
  * @param {Required} res 
  * @example
+ * 'declined_userID' must be sent from urlencoded form
  * 'must be called after verifying the user'
  */
  async function decline_invitation(req,res){
@@ -240,6 +247,41 @@ async function getUser_Friends(req,res){
     res.send(output);
 }
 
+
+//post interaction
+
+/**
+ * a route for handling post likes:
+ * if the user already liked the post then unlike it,
+ * otherwise like it.
+ * @param {*} req 
+ * @param {*} res 
+ * @example
+ * 'postID' must be sent from urlencoded form
+ * 'must be called after verifying the user'
+ */
+async function likeAndUnlikePost(req,res){
+    //postID must be sent from urlencoded form
+    const userID = res.locals.userID;
+    const {postID} = req.body;
+
+    //validate input
+    let condition = postID === ""||
+                    typeof postID === "undefined";
+    let validID = await database.isValidID(postID);
+    if (condition || !validID){
+        res.sendStatus(400);
+        return;
+    }
+
+    //revert the like in the post in the database
+    let {status} = await database.likeAndUnlikePost(userID,postID);
+
+
+    res.sendStatus(status);
+}
+
 module.exports = {userSignup,userSignin,logout,
                 sendInvitation,getUser_Invitations,
-                accept_invitation,decline_invitation,getUser_Friends};
+                accept_invitation,decline_invitation,getUser_Friends,
+                likeAndUnlikePost};

@@ -48,6 +48,8 @@ app.post("/user/invitations/decline",middleware.loggedUsersAccess,routes.decline
 
 app.get("/user/friends",middleware.loggedUsersAccess,routes.getUser_Friends);
 
+app.put("/user/post/like",middleware.loggedUsersAccess,routes.likeAndUnlikePost);
+
 
 //listen for connections (with server instead of app)
 server.listen(PORT,()=>console.log("\x1b[32m" + "server is on port " + PORT + "\x1b[0m"));
