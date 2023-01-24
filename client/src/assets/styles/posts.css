@@ -26,3 +26,13 @@
     height: 40px;
     width: 40px;
 }
+.post-interaction-item g{
+    fill: inherit;
+}
+.active-like{
+    fill: rgb(43, 116, 175);
+}
+
+.button:hover{
+    cursor: pointer;
+}
