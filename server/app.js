@@ -49,6 +49,7 @@ app.post("/user/invitations/decline",middleware.loggedUsersAccess,routes.decline
 app.get("/user/friends",middleware.loggedUsersAccess,routes.getUser_Friends);
 
 app.put("/user/post/like",middleware.loggedUsersAccess,routes.likeAndUnlikePost);
+app.post("/user/post/comment",middleware.loggedUsersAccess,routes.addCommentToPost);
 
 
 //listen for connections (with server instead of app)

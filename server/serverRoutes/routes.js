@@ -281,7 +281,38 @@ async function likeAndUnlikePost(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * a route for adding comment to a post:
+ * @param {*} req 
+ * @param {*} res 
+ * @example
+ * 'postID' and 'commentText' must be sent from urlencoded form
+ * 'must be called after verifying the user'
+ */
+ async function addCommentToPost(req,res){
+    //postID and commentText must be sent from urlencoded form
+    const userID = res.locals.userID;
+    const {postID,commentText} = req.body;
+
+    //validate input
+    let condition = postID === ""||
+                    typeof postID === "undefined" ||
+                    commentText === ""||
+                    typeof commentText === "undefined";
+    let validID = await database.isValidID(postID);
+    if (condition || !validID){
+        res.sendStatus(400);
+        return;
+    }
+
+    //add comment to the post
+    let {status} = await database.addCommentToPost(userID,postID,commentText);
+
+
+    res.sendStatus(status);
+}
+
 module.exports = {userSignup,userSignin,logout,
                 sendInvitation,getUser_Invitations,
                 accept_invitation,decline_invitation,getUser_Friends,
-                likeAndUnlikePost};
+                likeAndUnlikePost,addCommentToPost};

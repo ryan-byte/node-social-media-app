@@ -356,7 +356,7 @@ async function createPost(userID,text){
     try {
         let timeStamp = Math.floor(Date.now() / 1000);
         let likes = {total:0,users:{}}
-        let comments = {total:0,usersComments:{}}
+        let comments = {total:0,commentArr:[]}
         await postsCollection.insertOne({text,userID,likes,comments,timeStamp});
         return {status:201}
     } catch (error) {
@@ -645,7 +645,7 @@ async function loadChatMessages(room){
  * otherwise then like it.
  * @param {Object} userID 
  * @param {Object} postID 
- * @return {Object} {status} 
+ * @return {Object} {status:200/404/502} 
  */
 async function likeAndUnlikePost(userID,postID){
     try {
@@ -684,9 +684,54 @@ async function likeAndUnlikePost(userID,postID){
     
 }
 
+/**
+ * adds a user comment to the a post.
+ * @param {Object} userID 
+ * @param {Object} postID 
+ * @return {Object} {status} 
+ */
+async function addCommentToPost(userID,postID,commentText){
+    try {
+        //get the post comments object
+        const filter = {_id : new ObjectId(postID)};
+        let output = await postsCollection.findOne(filter,{projection:{comments:1,_id:0}});
+        if (output == null || output.comments == null){
+            return {status:404}
+        }
+        let comments = output.comments;
+        
+        //create new comment object
+        let timeStamp = Math.floor(Date.now() / 1000);
+        let newCommentObject = {
+            userID,
+            "text":commentText,
+            timeStamp
+        };
+
+        //add the new comment
+        comments.commentArr.push(newCommentObject);
+        comments.total++;
+
+        //update the comments object in the database
+        const updateDoc = {
+            $set: {
+                "comments":comments
+            },
+        };
+        await postsCollection.updateOne(filter,updateDoc);
+
+        //return success status code
+        return {status:200};
+        
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > addCommentToPost: \n"+ "\x1b[0m" + error.message);
+        return {status:502};
+    }
+}
+
 
 module.exports = {isValidID,userSignup,userSignin,getUserProfileById,getUserFriendsDataById,updateProfileDetails,
                 createPost,getPosts,getFriendsPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,sendInvitationRequest,acceptInvitation,declineInvitation,
                 getChatRoom,saveChatMessage,loadChatMessages,
-                likeAndUnlikePost};
+                likeAndUnlikePost,addCommentToPost};
