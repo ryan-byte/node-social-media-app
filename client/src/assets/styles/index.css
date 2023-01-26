@@ -27,6 +27,11 @@ code {
   height: 40px;
   border-radius: 50px;
 }
+.user-comment-profile-image{
+  width: 25px;
+  height: 25px;
+  border-radius: 50px;
+}
 .svg-color{
   fill: inherit ;
 }
@@ -34,4 +39,10 @@ code {
   fill: inherit;
   width: 30px;
   height: 30px;
+}
+.no-select {
+  -webkit-user-select: none; /* For Safari */
+  -moz-user-select: none; /* For Firefox */
+  -ms-user-select: none; /* For IE10+ */
+  user-select: none; /* Standard syntax */
 }

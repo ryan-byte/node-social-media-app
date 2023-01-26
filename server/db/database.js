@@ -699,11 +699,15 @@ async function addCommentToPost(userID,postID,commentText){
             return {status:404}
         }
         let comments = output.comments;
-        
+
+        //get username
+        let {username} = await getUserProfileById(userID);
+
         //create new comment object
         let timeStamp = Math.floor(Date.now() / 1000);
         let newCommentObject = {
             userID,
+            username,
             "text":commentText,
             timeStamp
         };

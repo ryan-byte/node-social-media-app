@@ -7,6 +7,7 @@ import { ReactComponent as Comment } from  '../../assets/svg/comment.svg';
 
 import postData from "../../utils/postData";
 import { getLoginCookieData } from "../../utils/accessPage";
+import Comments from "./Comments";
 
 //used memo export so the parent wont keep rerendering this component on every change
 export default memo(UserPost);
@@ -25,8 +26,10 @@ async function likeRequest(postID){
 
 function UserPost({postData,username}){
     const [totalLikes,setTotalLikes] = useState(postData.likes ? postData.likes.total: 0);
+    const [totalComments] = useState(postData.comments ? postData.comments.total: 0);
     const [alreadyLike,setAlreadyLike] = useState(false);
     const [postID] = useState(postData._id);
+    const [showComments,setShowComments] = useState(false);
 
     async function likePressed(ev){
         let element = ev.currentTarget;
@@ -42,6 +45,9 @@ function UserPost({postData,username}){
             await likeRequest(postID);
         }
     }
+    function commentIconPressed(){
+        setShowComments(!showComments);
+    }
 
     useEffect(()=>{
         //make the like active if the use already liked it
@@ -53,7 +59,6 @@ function UserPost({postData,username}){
         if (userAlreadyLikedPost) setAlreadyLike(true);
 
     },[setAlreadyLike,postData])
-
     return(
         <div>
             <div className="user-post-container">
@@ -81,16 +86,24 @@ function UserPost({postData,username}){
                 <hr />
                 <div className="post-interaction-container">
                     <div className="button">
-                        {totalLikes}
+                        <span className = "no-select">
+                            {totalLikes}
+                        </span>
                         <Like className={alreadyLike ? "post-interaction-item active-like": "post-interaction-item"} 
-                            onClick={(ev) => {
-                                likePressed(ev)
-                        }}/>
+                            onClick={likePressed}/>
                     </div>
-                    <div>
-                        <Comment className="post-interaction-item"/>
+                    <div className="button">
+                        <span className = "no-select">
+                            {totalComments}
+                        </span>
+                        <Comment className="post-interaction-item"
+                            onClick={commentIconPressed}
+                        />
                     </div>
                 </div>
+                {
+                    showComments && < Comments commentsObj={postData.comments} postID={postData._id} />
+                }
             </div>
             <br/>
         </div>

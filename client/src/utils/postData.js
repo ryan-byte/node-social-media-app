@@ -9,7 +9,7 @@
  * url = "/api/products"
  * url = "http://mydomain.com/api/products"
  * 
- * var data = {
+ * let data = {
         'email': 'example@gmail.com',
         'password': '123456'
     };

@@ -13,6 +13,10 @@ export default function UserPublish(){
     
     async function onSubmitPost(ev){
         ev.preventDefault();
+        if (textContent === ""){
+            return;
+        }
+
         //start loading
         setLoading(true);
         //disable the form button
