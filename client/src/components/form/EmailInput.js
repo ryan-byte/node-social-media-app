@@ -9,11 +9,12 @@
  * 
  */
 
-export default function EmailInput({label,attributs,value,setValue}){
+export default function EmailInput({label, attributs, value, setValue, error}){
     return (
         <div className="mb-3">
             <label htmlFor={attributs} className="form-label">{label}</label>
-            <input value={value} onChange={(ev)=>setValue(ev.target.value)} required type="email" className="form-control" name={attributs} id={attributs}/>
+            <input value={value} onChange={(ev)=>setValue(ev.target.value)} type="text" className="form-control" name={attributs} id={attributs}/>
+            {error && <span className="error-message">{error}</span>}
         </div>
     )
 }

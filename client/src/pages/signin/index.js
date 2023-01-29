@@ -19,23 +19,22 @@ function Signin(){
     const [password,setPassword] = useState("");
 
     const [error,setError] = useState(undefined);
+    const [inputsErrors,setInputsErrors] = useState({});
     const [loading,setLoading] = useState(false);
 
 
     async function onSignin(ev){
         ev.preventDefault();
-        let errorMessage = "";
-        //start loading feedback
-        setLoading(true);
+        
         //check if the inputs are correct
-        if (errorMessage === ""){
-            setError(undefined);
-        }else{
-            setError(errorMessage);
-            //end loading feedback
-            setLoading(false);
+        if (!validateForm()){
             return;
         }
+
+
+        //start loading feedback
+        setLoading(true);
+        
         //send an api request
         let data = {
             email,
@@ -48,6 +47,7 @@ function Signin(){
             await UpdateFriends();
             navigate("/")
         }else{
+            let errorMessage = "";
             let status = response.status;
             if (status === 404){
                 errorMessage = `User not found`;
@@ -56,9 +56,36 @@ function Signin(){
             }
             setError(errorMessage);
         }
+
         //end loading feedback
         setLoading(false);
     }
+
+    const validateForm = () => {
+        let newErrors = {};
+        let valid = true;
+
+        //email verification
+        if (!email) {
+            newErrors.email = 'Email is required';
+            valid = false;
+        } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            newErrors.email = 'Please enter a valid email address';
+            valid = false;
+        }
+
+        //password verification
+        if (!password) {
+            newErrors.password = "Password is required";
+            valid = false;
+        }
+
+        //set the new error
+        setInputsErrors(newErrors);
+        return valid;
+    };
+
+
 
     useEffect(()=>{
         restricted_To_LoggedUsers(navigate);
@@ -82,8 +109,13 @@ function Signin(){
                 </div>
 
                 
-                <EmailInput label={"Email"} attributs={"email"} value={email} setValue={setEmail} />
-                <PasswordInput label={"Password"} attributs={"password"} value={password} setValue={setPassword} />
+                <EmailInput label={"Email"} attributs={"email"} value={email} 
+                        setValue={setEmail} 
+                        error={inputsErrors.email}/>
+
+                <PasswordInput label={"Password"} attributs={"password"} value={password} 
+                        setValue={setPassword} 
+                        error={inputsErrors.password}/>
 
                 {loading && <Loading />}
                 <ErrorOutput message={error}/>

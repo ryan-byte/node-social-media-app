@@ -4,8 +4,8 @@ import {Link,useNavigate} from "react-router-dom";
 import { useState ,useEffect } from 'react';
 import {restricted_To_LoggedUsers} from "../../utils/accessPage";
 
-import postData from '../../utils/postData';
 import ErrorOutput from '../../components/output/ErrorOutput';
+import postData from '../../utils/postData';
 import TextInput from '../../components/form/TextInput';
 import PasswordInput from '../../components/form/PasswordInput';
 import EmailInput from '../../components/form/EmailInput';
@@ -22,28 +22,20 @@ function Signup(){
     const [confirmPassword,setConfirmPassword] = useState("");
 
     const [error,setError] = useState(undefined);
+    const [inputsErrors,setInputsErrors] = useState({});
     const [loading,setLoading] = useState(false);
 
     async function onSignup(ev){
         ev.preventDefault();
-        let errorMessage = "";
-        //start loading feedback
-        setLoading(true);
+
         //check if the inputs are correct
-        if (confirmPassword !== password){
-            errorMessage += "password and confirm password must be the same\n";
-        }
-        if (password.length <= 8){
-            errorMessage += "password length must be bigger then 8\n";
-        }
-        if (errorMessage === ""){
-            setError(undefined);
-        }else{
-            setError(errorMessage);
-            //end loading feedback
-            setLoading(false);
+        if (!validateForm()){
             return;
         }
+
+        //start loading feedback
+        setLoading(true);
+        
         //send an api request with useFetch
         let data = {
             username,
@@ -57,6 +49,7 @@ function Signup(){
             await UpdateFriends();
             navigate("/");
         }else{
+            let errorMessage;
             let status = response.status;
             if (status === 409){
                 errorMessage = `email already exists`;
@@ -69,6 +62,50 @@ function Signup(){
         //end loading feedback
         setLoading(false);
     }
+
+    const validateForm = () => {
+        let newErrors = {};
+        let valid = true;
+
+        //username verification
+        if (!username) {
+            newErrors.username = 'Username is required';
+            valid = false;
+        }
+
+        //email verification
+        if (!email) {
+            newErrors.email = 'Email is required';
+            valid = false;
+        } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            newErrors.email = 'Please enter a valid email address';
+            valid = false;
+        }
+
+        //password verification
+        if (!password) {
+            newErrors.password = "Password is required";
+            valid = false;
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&*])(?=.{8,})/.test(password)) {
+            newErrors.password = "Please enter a strong password (at least 8 characters, including uppercase, lowercase, number, and special characters)";
+            valid = false;
+        }
+
+        //confirmPassword verification
+        if (!confirmPassword) {
+            newErrors.confirmPassword = 'Confirm Password is required';
+            valid = false;
+        } else if (confirmPassword !== password) {
+            newErrors.confirmPassword = 'Confirm Password must be the same as password';
+            valid = false;
+        }
+        
+
+        //set the new error
+        setInputsErrors(newErrors);
+        return valid;
+      };
+
 
     useEffect(()=>{
         restricted_To_LoggedUsers(navigate);
@@ -90,13 +127,24 @@ function Signup(){
                 </div>
 
 
-                <TextInput label={"Username"} attributs={"username"} value={username} setValue={setUsername} />
-                <EmailInput label={"Email"} attributs={"email"} value={email} setValue={setEmail} />
-                <PasswordInput label={"Password"} attributs={"password"} value={password} setValue={setPassword} />
-                <PasswordInput label={"Confirm Password"} attributs={"confirmPassword"} value={confirmPassword} setValue={setConfirmPassword} />
+                <TextInput label={"Username"} attributs={"username"} value={username} 
+                        setValue={setUsername} 
+                        error={inputsErrors.username} />
+
+                <EmailInput label={"Email"} attributs={"email"} value={email} 
+                        setValue={setEmail} 
+                        error={inputsErrors.email} />
+
+                <PasswordInput label={"Password"} attributs={"password"} value={password} 
+                        setValue={setPassword} 
+                        error={inputsErrors.password} />
+
+                <PasswordInput label={"Confirm Password"} attributs={"confirmPassword"} value={confirmPassword} 
+                        setValue={setConfirmPassword} 
+                        error={inputsErrors.confirmPassword} />
 
                 {loading && <Loading />}
-                <ErrorOutput message={error}/>
+                {error && <ErrorOutput message={error} />}
 
                 <button type="submit" className="btn btn-primary">Signup</button>
             </form>
