@@ -65,8 +65,8 @@ export default function ChatUI({changeRoom,send_message_socket,messageArr,setMes
                 <div className="chat-messages-side">
                     <div id="messages" className="chat-all-messages-holder">
                         {
-                            messageArr.map(({message,type},id)=>{
-                                return (<MessageComponent key={id} message={message} type={type}/>)
+                            messageArr.map(({message ,timestamp, type},id)=>{
+                                return (<MessageComponent key={id} message={message} type={type} timestamp={timestamp} />)
                             })
                         }
                     </div>

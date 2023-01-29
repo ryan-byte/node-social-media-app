@@ -17,11 +17,11 @@ export default function Chat(){
     const navigate = useNavigate();
 
     //setup messages functions
-    function add_sendMessage_UI(message){
-        setMessageArr((oldArr) => [...oldArr, {message,type:"send"}]);
+    function add_sendMessage_UI(message, timestamp){
+        setMessageArr((oldArr) => [...oldArr, {message, timestamp, type:"send"}]);
     }
-    function add_receivedMessage_UI(message){
-        setMessageArr((oldArr) => [...oldArr, {message,type:"receive"}]);
+    function add_receivedMessage_UI(message, timestamp){
+        setMessageArr((oldArr) => [...oldArr, {message, timestamp, type:"receive"}]);
     }
 
     /**
@@ -31,7 +31,9 @@ export default function Chat(){
     function send_message_socket(message){
         if (socket){
             socket.emit("send_message",message);
-            add_sendMessage_UI(message);
+            //show the new message with its timestamp
+            let timeStamp = Math.floor(Date.now() / 1000);
+            add_sendMessage_UI(message, timeStamp);
         }
     }
     
@@ -73,16 +75,16 @@ export default function Chat(){
             setError(err);
         })
         //messages events
-        newSocket.on("receive_message",(message)=>{
-            add_receivedMessage_UI(message);
+        newSocket.on("receive_message",({message, timeStamp})=>{
+            add_receivedMessage_UI(message, timeStamp);
         });
         //loading messages
         newSocket.on("loading_messages",(loaded_messageArr)=>{
             loaded_messageArr.forEach(messageItem => {
                 if (messageItem.sender === userID){
-                    add_sendMessage_UI(messageItem.message);
+                    add_sendMessage_UI(messageItem.message, messageItem.timeStamp);
                 }else{
-                    add_receivedMessage_UI(messageItem.message);
+                    add_receivedMessage_UI(messageItem.message, messageItem.timeStamp);
                 }
             });
         });

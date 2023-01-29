@@ -608,8 +608,8 @@ async function saveChatMessage(sender,room,message){
         const timeStamp = Math.floor(Date.now() / 1000);
         sender = new ObjectId(sender); 
         room = new ObjectId(room); 
-        chatMessagesCollection.insertOne({sender,room,message,timeStamp});
-        return {status:200};
+        await chatMessagesCollection.insertOne({sender,room,message,timeStamp});
+        return {status:200, timeStamp};
     } catch (error) {
         console.error("\x1b[31m" + "error from database > saveChatMessage: \n"+ "\x1b[0m" + error.message);
         return {status:502};

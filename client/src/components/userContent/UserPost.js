@@ -1,6 +1,6 @@
 import { memo, useState, useEffect } from "react";
 
-import timePassedBy from "../../utils/timePassedBy";
+import { convertTimestamp } from "../../utils/utils";
 import empty_profile from "../../assets/images/emptyProfile.png";
 import { ReactComponent as Like } from  '../../assets/svg/like.svg';
 import { ReactComponent as Comment } from  '../../assets/svg/comment.svg';
@@ -73,7 +73,7 @@ function UserPost({postData,username}){
                             </div>
                             <div className="bd-highlight">
                                 <code>
-                                    {timePassedBy(postData.timeStamp)}
+                                    {convertTimestamp(postData.timeStamp)}
                                 </code>
                             </div>
                         </div>

@@ -1,4 +1,5 @@
 import { memo, useEffect } from "react";
+import { convertTimestamp } from "../../utils/utils";
 
 /**
  * simple jsx message component that will show the message as either sent or received.
@@ -7,13 +8,13 @@ import { memo, useEffect } from "react";
  * @param {String} type should be either (send/receive) so it will set the UI to the right class
  * @returns JSX
  */
-function MessageComponent({message,type}){
+function MessageComponent({message, timestamp, type}){
     return (
         <div>
             {
                 type === "send" 
-                ? <CreateSendMessageUI message={message} />
-                : <CreateReceiveMessageUI message={message} />
+                ? <CreateSendMessageUI message={message} timestamp={timestamp} />
+                : <CreateReceiveMessageUI message={message} timestamp={timestamp} />
             }
         </div>
     )
@@ -23,20 +24,24 @@ function MessageComponent({message,type}){
 export default memo(MessageComponent)
 
 //static functions
-function CreateSendMessageUI({message}){
+function CreateSendMessageUI({message, timestamp}){
+    const time = convertTimestamp(timestamp);
     useEffect(()=>{
         const messages = document.getElementById("messages");
         scrollDown(messages);
     })
     return (
         <div className="chat-message-holder">
+            <div className="time-currentUser mx-2">{time}</div>
             <div className="chat-message-currentUser">
                 {message}
             </div>
         </div>
     )
 }
-function CreateReceiveMessageUI({message}){
+function CreateReceiveMessageUI({message, timestamp}){
+    const time = convertTimestamp(timestamp);
+
     //when receiving messages scroll down only if the user is down
     useEffect(()=>{
         const messages = document.getElementById("messages");
@@ -46,6 +51,7 @@ function CreateReceiveMessageUI({message}){
     })
     return (
         <div className="chat-message-holder">
+            <div className="time-otherUser mx-2">{time}</div>
             <div className="chat-message-otherUser">
                 {message}
             </div>

@@ -65,9 +65,11 @@ function Chat(server){
             
             if (validIds){
                 //save the message
-                database.saveChatMessage(clientID,room,message);
-                //send message to everyone else in the room
-                client.to(room).emit("receive_message",message);
+                let {status,timeStamp} = await database.saveChatMessage(clientID,room,message);
+                if (status === 200){
+                    //send message to everyone else in the room
+                    client.to(room).emit("receive_message",{message, timeStamp});
+                }
             }
         })
     });
