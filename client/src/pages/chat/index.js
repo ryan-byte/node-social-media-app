@@ -57,6 +57,9 @@ export default function Chat(){
         setSocket(newSocket);
 
         newSocket.on("connect",()=>{
+            if (error === "xhr poll error"){
+                setError(undefined)
+            }
             console.log("user connected");
         })
         newSocket.on("disconnect",()=>{
@@ -98,7 +101,7 @@ export default function Chat(){
             newSocket.off("loading_messages");
             newSocket.close();
         }
-    }, [setSocket,userID,navigate]);
+    }, [setSocket, userID, navigate, error]);
 
     return (
         <div>
