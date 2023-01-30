@@ -13,6 +13,7 @@ export default function Chat(){
     const [error,setError] = useState(undefined);
     const [messageArr,setMessageArr] = useState([]);
     const [userID] = useState(getLoginCookieData().userID);
+    const [loading,setLoading] = useState(false);
     
     const navigate = useNavigate();
 
@@ -44,7 +45,10 @@ export default function Chat(){
      */
     function changeRoom(targetUserId){
         if (socket){
-            socket.emit("changeRoom",targetUserId)
+            socket.emit("changeRoom",targetUserId);
+            //start change room loading (will stop loading when the server responds with change room success)
+            //also will stop when the server responds with an error
+            setLoading(true);
         }
     }
 
@@ -76,6 +80,9 @@ export default function Chat(){
         });
         newSocket.on("Error",(err)=>{
             setError(err);
+            
+            //stop loading
+            setLoading(false);
         })
         //messages events
         newSocket.on("receive_message",({message, timeStamp})=>{
@@ -90,6 +97,8 @@ export default function Chat(){
                     add_receivedMessage_UI(messageItem.message, messageItem.timeStamp);
                 }
             });
+            //stop loading
+            setLoading(false);
         });
 
         return ()=>{
@@ -107,10 +116,11 @@ export default function Chat(){
         <div>
             {error && <ErrorOutput message={error}/>}
             <ChatUI 
-                changeRoom={changeRoom} 
-                send_message_socket={send_message_socket} 
-                messageArr={messageArr}
-                setMessageArr={setMessageArr}/>
+                changeRoom = {changeRoom} 
+                send_message_socket = {send_message_socket} 
+                messageArr = {messageArr}
+                setMessageArr = {setMessageArr}
+                loading = {loading}/>
         </div>
     )
 }

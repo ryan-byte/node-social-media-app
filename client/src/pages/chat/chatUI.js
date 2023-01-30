@@ -2,9 +2,10 @@ import empty_profile from "../../assets/images/emptyProfile.png";
 import { GetFriends } from "../../utils/FriendsObject";
 import {useState,useEffect} from "react";
 import MessageComponent from "./messageComponent";
+import Loading from "../../components/feedback/Loading";
 
 
-export default function ChatUI({changeRoom,send_message_socket,messageArr,setMessageArr}){
+export default function ChatUI({changeRoom, send_message_socket, messageArr, setMessageArr, loading}){
     const [friends,setFriends] = useState(undefined);
     const [activeUser,setActiveUser] = useState(null);
     const [message, setMessage] = useState("");
@@ -56,20 +57,29 @@ export default function ChatUI({changeRoom,send_message_socket,messageArr,setMes
 
     return (
         <div className="chat-container">
+            {/* friends side */}
             <div className="chat-users-side">
                 {friends && renderFriends(friends.ids)}
             </div>
 
+
             {
                 activeUser &&
                 <div className="chat-messages-side">
+                    {/* chat messages */}
                     <div id="messages" className="chat-all-messages-holder">
                         {
                             messageArr.map(({message ,timestamp, type},id)=>{
                                 return (<MessageComponent key={id} message={message} type={type} timestamp={timestamp} />)
                             })
                         }
+                        
+                        {/* loading */}
+                        {loading && <Loading/>}
+
                     </div>
+
+                    {/* submit message */}
                     <form onSubmit={onMessageSubmit} className="chat-input-holder">
                         <input value = {message} onChange={(ev)=>setMessage(ev.target.value)} type="text" className="chat-input-text" placeholder="Type your message here" />
                         <input type="submit" className="chat-input-button" value="Send" />
