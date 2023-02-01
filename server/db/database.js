@@ -133,9 +133,9 @@ async function getUserProfileById(id){
  * like that the user have no friends instead of undefined
  * @param {Required} id 
  */
-async function getUserFriendsDataById(id){
+async function getUserFriendsDataById(userId){
     try {
-        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{friends:1,username:1,_id:0}});
+        let output = await usersCollection.findOne({_id:new ObjectId(userId)},{projection:{friends:1,username:1,_id:0}});
         if (output === null) return {status:404};
         if (output["friends"] == undefined){
             output["friends"] = {ids:{},total:0,received_invitation:{},sent_invitation:{}};
