@@ -55,6 +55,7 @@ export default function Chat(){
     }
 
 
+    //this useEffect is used to setup the socket
     useEffect(()=>{
         //restrict the access to this page
         restricted_To_unLoggedUsers(navigate);
@@ -109,9 +110,9 @@ export default function Chat(){
         //online/offline status update
         newSocket.on("user_online", (clientID)=>{
             //a user came online
-            setOnlineFriends((oldOnlineFriends)=> {
-                oldOnlineFriends[clientID] = "online"
-                return oldOnlineFriends;
+            setOnlineFriends((oldOnlineFriends)=>{
+                oldOnlineFriends[clientID] = "online";
+                return {...oldOnlineFriends};
             });
         })
         newSocket.on("friends_online", (onlineFriends)=>{

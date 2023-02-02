@@ -12,6 +12,8 @@ function ChatUI({changeRoom, send_message_socket, messageArr, setMessageArr, loa
     const [message, setMessage] = useState("");
 
     
+
+    //change the target friend to talk to
     function changeTargetUser(id){
         //dont change target user if it is already active
         if (id !== activeUser){
@@ -23,6 +25,8 @@ function ChatUI({changeRoom, send_message_socket, messageArr, setMessageArr, loa
             setMessageArr([]);
         }
     }
+
+    //render the friends sid
     function renderFriends(friends){
         let elementsArray = [];
         for (const id in friends){
@@ -46,6 +50,7 @@ function ChatUI({changeRoom, send_message_socket, messageArr, setMessageArr, loa
         return elementsArray;
     }
     
+    //when a message has been sent to the server
     function onMessageSubmit(ev){
         ev.preventDefault();
         if (message !== ""){
