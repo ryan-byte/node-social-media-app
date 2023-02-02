@@ -63,7 +63,7 @@ module.exports = function Chat(server){
                 room = chatRoomPrefix + roomID;
                 client.join(room);
                 //load the room messages
-                const {messageArr} = await database.loadChatMessages(room);
+                const {messageArr} = await database.loadChatMessages(roomID);
                 //send the loaded messages to the client
                 if (messageArr) client.emit("loading_messages",messageArr); 
             }
@@ -71,11 +71,13 @@ module.exports = function Chat(server){
 
         //messages events
         client.on("send_message", async(message)=>{
-            let validIds = await database.isValidID(room) && await database.isValidID(clientID);
+            //get the room id that will be used in the database
+            let roomID = room.split(chatRoomPrefix)[1];
+            let validIds = await database.isValidID(roomID) && await database.isValidID(clientID);
             
             if (validIds){
                 //save the message
-                let {status,timeStamp} = await database.saveChatMessage(clientID,room,message);
+                let {status,timeStamp} = await database.saveChatMessage(clientID,roomID,message);
                 if (status === 200){
                     //send message to everyone else in the room
                     client.to(room).emit("receive_message",{message, timeStamp});
