@@ -1,14 +1,16 @@
 import empty_profile from "../../assets/images/emptyProfile.png";
 import { GetFriends } from "../../utils/FriendsObject";
-import {useState,useEffect} from "react";
+import {useState,useEffect, memo} from "react";
 import MessageComponent from "./messageComponent";
 import Loading from "../../components/feedback/Loading";
 
+export default memo(ChatUI)
 
-export default function ChatUI({changeRoom, send_message_socket, messageArr, setMessageArr, loading}){
+function ChatUI({changeRoom, send_message_socket, messageArr, setMessageArr, loading, onlineFriends}){
     const [friends,setFriends] = useState(undefined);
     const [activeUser,setActiveUser] = useState(null);
     const [message, setMessage] = useState("");
+
     
     function changeTargetUser(id){
         //dont change target user if it is already active
@@ -29,6 +31,8 @@ export default function ChatUI({changeRoom, send_message_socket, messageArr, set
                 className={activeUser === id ? "chat-user-holder active" : "chat-user-holder"}
                 onClick={()=>changeTargetUser(id)}
                 key={id} > 
+                    {/* the following div is used in the online, offline user status */}
+                    <div className = {onlineFriends[id] ? "status-indicator online mx-2" : "status-indicator offline mx-2"}></div>
                     <img 
                         className="user-post-profile-image invitation-user-link" 
                         src={empty_profile} 

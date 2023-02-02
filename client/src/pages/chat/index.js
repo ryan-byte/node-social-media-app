@@ -14,6 +14,8 @@ export default function Chat(){
     const [messageArr,setMessageArr] = useState([]);
     const [userID] = useState(getLoginCookieData().userID);
     const [loading,setLoading] = useState(false);
+
+    const [onlineFriends, setOnlineFriends] = useState({});
     
     const navigate = useNavigate();
 
@@ -106,10 +108,15 @@ export default function Chat(){
 
         //online/offline status update
         newSocket.on("user_online", (clientID)=>{
-            console.log("a friend came online: ",clientID);
+            //a user came online
+            setOnlineFriends((oldOnlineFriends)=> {
+                oldOnlineFriends[clientID] = "online"
+                return oldOnlineFriends;
+            });
         })
         newSocket.on("friends_online", (onlineFriends)=>{
-            console.log("current online friends: ",onlineFriends);
+            //get all the online friends (this is supposed to launch only when first visiting the chat)
+            setOnlineFriends(onlineFriends);
         })
 
         return ()=>{
@@ -123,7 +130,7 @@ export default function Chat(){
             newSocket.off("friends_online");
             newSocket.close();
         }
-    }, [setSocket, userID, navigate, error]);
+    }, [setSocket, userID, navigate, error, setOnlineFriends]);
 
     return (
         <div>
@@ -133,7 +140,8 @@ export default function Chat(){
                 send_message_socket = {send_message_socket} 
                 messageArr = {messageArr}
                 setMessageArr = {setMessageArr}
-                loading = {loading}/>
+                loading = {loading}
+                onlineFriends = {onlineFriends} />
         </div>
     )
 }

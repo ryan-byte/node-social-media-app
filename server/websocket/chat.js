@@ -113,13 +113,13 @@ async function setup_UserOnlineStatus(io, client, clientID, connectedUsers){
     let friendsIDs = Object.keys(friends.ids) 
 
     //when the friend is connected add them to the current userID room and add the user to their room
-    let onlineFriends = [];
+    let onlineFriends = {};
     friendsIDs.forEach(friendID => {
         if (connectedUsers[friendID]){
             let friendRoom = clientRoomPrefix + friendID;
             let friendSocketId = connectedUsers[friendID];
             let friendSocket = io.sockets.sockets.get(friendSocketId);
-            onlineFriends.push(friendID);
+            onlineFriends[friendID] = "online";
 
             //connect the current client to the friend room
             client.join(friendRoom);
@@ -133,7 +133,7 @@ async function setup_UserOnlineStatus(io, client, clientID, connectedUsers){
     client.to(clientRoom).emit("user_online", clientID);
 
     //emit an event to the client giving him his connected friends list
-    if (onlineFriends.length > 0){
+    if (Object.keys(onlineFriends).length > 0){
         client.emit("friends_online", onlineFriends);
     }
 }
