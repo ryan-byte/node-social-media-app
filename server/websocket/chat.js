@@ -46,6 +46,13 @@ module.exports = function Chat(server){
 
             //remove user to connected object
             delete connectedUsers[clientID]
+
+            //emit an event to everyone connected to the client room indicating that he is now offline
+            let clientRoom = clientRoomPrefix + clientID;
+            client.to(clientRoom).emit("user_offline", clientID);
+
+            //remove the current client room
+            io.socketsLeave(clientRoom);
         });
         
         //change user room event

@@ -115,6 +115,13 @@ export default function Chat(){
                 return {...oldOnlineFriends};
             });
         })
+        newSocket.on("user_offline", (clientID)=>{
+            //a user went offline
+            setOnlineFriends((oldOnlineFriends)=>{
+                delete oldOnlineFriends[clientID];
+                return {...oldOnlineFriends};
+            });
+        })
         newSocket.on("friends_online", (onlineFriends)=>{
             //get all the online friends (this is supposed to launch only when first visiting the chat)
             setOnlineFriends(onlineFriends);
