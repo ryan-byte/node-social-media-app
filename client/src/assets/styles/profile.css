@@ -123,3 +123,7 @@
 .user-publish-form-submit:disabled{
     opacity: 0.6;
 }
+
+#uploadModal{
+    color: black;
+}
