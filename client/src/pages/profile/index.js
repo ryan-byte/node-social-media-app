@@ -29,7 +29,7 @@ export default function Profile(){
 
     return (
         <div>
-            {userInfoData && <UserImages userInfoData={userInfoData}/>}
+            {userInfoData && <UserImages userInfoData={userInfoData} ownerProfileVisited={ownerProfileVisited}/>}
 
             {
                 (userInfoData && currentUser_Friends)

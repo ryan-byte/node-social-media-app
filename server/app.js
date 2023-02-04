@@ -6,7 +6,7 @@ require("dotenv").config();
 const express = require("express");
 const routes = require("./serverRoutes/routes");
 const middleware = require("./serverRoutes/middleware");
-const apiRoutes = require("./api/apiRoutes");
+const apiRoutes = require("./serverRoutes/apiRoutes");
 
 //Note: make sure to listen with (server.listen) instead of (app.listen) so that the websocket works 
 const app = express();
