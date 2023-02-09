@@ -7,6 +7,7 @@ const express = require("express");
 const routes = require("./serverRoutes/routes");
 const middleware = require("./serverRoutes/middleware");
 const apiRoutes = require("./serverRoutes/apiRoutes");
+const uploadFileMiddleware = require("./cloudStorage/uploadFileToServer_middleware");
 
 //Note: make sure to listen with (server.listen) instead of (app.listen) so that the websocket works 
 const app = express();
@@ -21,6 +22,9 @@ require("./websocket/chat")(server);
 //api endpoints
 app.get("/api/user/profile/:id",apiRoutes.getUserProfileData);
 app.put("/api/user/profile/details",middleware.loggedUsersAccess,apiRoutes.updateUserProfileDetails);
+app.put("/api/user/profile/picture",middleware.loggedUsersAccess,
+                                    uploadFileMiddleware.uploadImageToServer_middleware,
+                                    apiRoutes.updateProfilePicture);
 
 app.put("/api/user/setting/username",middleware.loggedUsersAccess,apiRoutes.updateUsername);
 app.put("/api/user/setting/password",middleware.loggedUsersAccess,apiRoutes.updatePassword);

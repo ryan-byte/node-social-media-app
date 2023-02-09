@@ -1,7 +1,6 @@
 const database = require("../db/database");
 const hashPassword = require("../utils/hashPassword");
 const cookieManager = require("../utils/cookieManager");
-const firebase = require("../cloudStorage/firebase");
 
 
 //signin /signup

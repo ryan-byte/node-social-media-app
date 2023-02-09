@@ -159,6 +159,20 @@ async function updatePassword(req,res){
     res.sendStatus(status);
 }
 
+/**
+ * update the user profile picture
+ * 
+ *     'Note: This route must be called after a verification middleware that will verify if the user authorized and uploadImage middleware'
+ * @param {Required} req 
+ * @param {Required} res 
+ */
+async function updateProfilePicture(req,res){
+    const fileName = res.locals.fileName;
+    const imageUrl = res.locals.imageUrl;
+    console.log("url: ",imageUrl);
+    console.log("fileName: ",fileName);
+    res.sendStatus(200);
+}
 
 //user posts
 
@@ -270,4 +284,4 @@ async function getFriendsPosts(req,res){
 module.exports = {getUserProfileData,updateUserProfileDetails,
                 createUserPost,getUserPosts,
                 updateUsername,updatePassword,
-                searchUser,getFriendsPosts};
+                searchUser,getFriendsPosts,updateProfilePicture};
