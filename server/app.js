@@ -24,7 +24,7 @@ app.get("/api/user/profile/:id",apiRoutes.getUserProfileData);
 app.put("/api/user/profile/details",middleware.loggedUsersAccess,apiRoutes.updateUserProfileDetails);
 app.put("/api/user/profile/picture",middleware.loggedUsersAccess,
                                     uploadFileMiddleware.uploadImageToServer_middleware,
-                                    apiRoutes.updateProfilePicture);
+                                    apiRoutes.updateProfileImage);
 
 app.put("/api/user/setting/username",middleware.loggedUsersAccess,apiRoutes.updateUsername);
 app.put("/api/user/setting/password",middleware.loggedUsersAccess,apiRoutes.updatePassword);

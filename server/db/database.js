@@ -19,7 +19,6 @@ const chatMessagesCollection = db.collection("chat_messages");
 async function isValidID(id){
     return ObjectId.isValid(id);
 }
-
 /**
  * checks if the userID exists
  * @param {object} userID 
@@ -41,7 +40,6 @@ async function userExists(userID){
         return false;
     }
 }
-
 /**
  * updates the friends object inside a user document in the database
  * 
@@ -91,7 +89,6 @@ async function getUserByEmail(email,projection={}){
         return {error};
     }
 }
-
 /**
  * this function gets all the users that have similar names from the database.
  * 
@@ -107,7 +104,6 @@ async function getUsersByName(username){
         return {status:500};
     }
 }
-
 /**
  * gets the profile that much a specific user id.
  * @param {String} id
@@ -115,7 +111,7 @@ async function getUsersByName(username){
  */
 async function getUserProfileById(id){
     try {
-        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{_id:1,username:1,details:1}});
+        let output = await usersCollection.findOne({_id:new ObjectId(id)},{projection:{_id:1,username:1,details:1,image:1}});
         if (output === null) return {status:404};
         return output;
     } catch (error) {
@@ -126,7 +122,6 @@ async function getUserProfileById(id){
         return {status:502};
     }
 }
-
 /**
  * Gets all the user friends data
  * for old users who dont have the friends objects it will return a friends object that looks
@@ -187,7 +182,6 @@ async function userSignin(email,password){
         return {status:500};
     }
 }
-
 /**
  * Add a user to the database.
  * 
@@ -220,7 +214,6 @@ async function userSignup(username,email,hashedPassword,hashSalt){
         return {status:500};
     }
 }
-
 /**
  * verify if the given password of a specific user.
  * 
@@ -288,7 +281,6 @@ async function updateProfileDetails(userID,aboutMe){
         return {status:502};
     }
 }
-
 /**
  * create a new posts that will be saved with a userID.
  * @param {String} userID 
@@ -314,7 +306,6 @@ async function updateUsername(userID,username){
         return {status:502};
     }
 }
-
 /**
  * 
  * @param {String} userID 
@@ -342,7 +333,46 @@ async function updateUserPassword(userID,hashedPassword,hashSalt){
         return {status:500};
     }
 }
-
+/**
+ * @param {String} userID 
+ * @returns image object which contain image url and image name
+ */
+async function getUserProfileImage(userID){
+    try {
+        let _id = new ObjectId(userID);
+        let {image} = await usersCollection.findOne({_id},{projection:{_id:0, image:1}});
+        if (image == undefined) return {};
+        return image;
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > getUserProfileimage: \n"+ "\x1b[0m" + error.message);
+        return {error};
+    }
+}
+/**
+ * update the user profile image
+ * @param {String} userID 
+ * @param {String} imageURL image url that contains the image
+ * @param {String} imageName 
+ * @returns 
+ */
+async function updateUserProfileImage(userID,imageURL,imageName){
+    try {
+        const filter = { _id: new ObjectId(userID) };
+        const updateDoc = {
+            $set: {
+                image:{
+                    imageURL,
+                    imageName
+                }
+            },
+        };
+        await usersCollection.updateOne(filter,updateDoc);
+        return {status:200};
+    } catch (error) {
+        console.error("\x1b[31m" + "error from database > updateUserProfileImage: \n"+ "\x1b[0m" + error.message);
+        return {status:502, error};
+    }
+}
 
 //user posts
 
@@ -367,7 +397,6 @@ async function createPost(userID,text){
         return {status:502};
     }
 }
-
 /**
  * get all the posts of a specific user
  * @param {String} userID 
@@ -382,7 +411,6 @@ async function getPosts(userID){
         return {status:502};
     }
 }
-
 /**
  * get friends posts in order of the timestamp
  * @param {String} friendsArr_id 
@@ -449,7 +477,6 @@ async function sendInvitationRequest(currentUserID,targetID){
         return {status:502};
     }
 }
-
 /**
  * accepts the invitation request of a user
  * 
@@ -510,7 +537,6 @@ async function acceptInvitation(currentUserID,acceptedUserID){
         return {status:502};
     }    
 }
-
 /**
  * decline the invitation request of a user
  * 
@@ -595,7 +621,6 @@ async function getChatRoom(user1_ID,user2_ID){
     }
 
 }
-
 /**
  * saves chat message
  * @param {String} sender 
@@ -615,7 +640,6 @@ async function saveChatMessage(sender,room,message){
         return {status:502};
     }   
 }
-
 /**
  * will load the latest 20 messages from a room
  * @param {String} room
@@ -683,7 +707,6 @@ async function likeAndUnlikePost(userID,postID){
     }
     
 }
-
 /**
  * adds a user comment to the a post.
  * @param {Object} userID 
@@ -738,4 +761,5 @@ module.exports = {isValidID,userSignup,userSignin,getUserProfileById,getUserFrie
                 createPost,getPosts,getFriendsPosts,updateUsername,updateUserPassword,verifyUserPassword,
                 getUsersByName,sendInvitationRequest,acceptInvitation,declineInvitation,
                 getChatRoom,saveChatMessage,loadChatMessages,
-                likeAndUnlikePost,addCommentToPost};
+                likeAndUnlikePost,addCommentToPost,
+                getUserProfileImage,updateUserProfileImage};

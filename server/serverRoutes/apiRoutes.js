@@ -1,6 +1,7 @@
 const database = require("../db/database");
 const hashPassword = require("../utils/hashPassword");
 const cookieManager = require("../utils/cookieManager");
+const firebase = require("../cloudStorage/firebase");
 
 
 /**
@@ -160,18 +161,31 @@ async function updatePassword(req,res){
 }
 
 /**
- * update the user profile picture
+ * update the user profile Image
  * 
  *     'Note: This route must be called after a verification middleware that will verify if the user authorized and uploadImage middleware'
  * @param {Required} req 
  * @param {Required} res 
  */
-async function updateProfilePicture(req,res){
+async function updateProfileImage(req,res){
+    const userID = res.locals.userID;
     const fileName = res.locals.fileName;
     const imageUrl = res.locals.imageUrl;
-    console.log("url: ",imageUrl);
-    console.log("fileName: ",fileName);
-    res.sendStatus(200);
+    //get current user image
+    let {imageName} = await database.getUserProfileImage(userID);
+    //if the image exists then delete it from the cloud storage
+    if (imageName){
+        let result = await firebase.deleteImage(imageName);
+        //delete the image only if the status code is different from 404 (because if the image is not found the script should keep going)
+        if (result && result.error.code !== 404){
+            res.status(502).send("Error while deleting the old image");
+            return;
+        }
+    }
+    //update the user image url to the current url
+    let {status} = await database.updateUserProfileImage(userID,imageUrl,fileName);
+
+    res.sendStatus(status);
 }
 
 //user posts
@@ -284,4 +298,4 @@ async function getFriendsPosts(req,res){
 module.exports = {getUserProfileData,updateUserProfileDetails,
                 createUserPost,getUserPosts,
                 updateUsername,updatePassword,
-                searchUser,getFriendsPosts,updateProfilePicture};
+                searchUser,getFriendsPosts,updateProfileImage};
