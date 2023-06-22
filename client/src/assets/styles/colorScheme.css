@@ -1,7 +1,7 @@
 :root {
-    --primary1: #C3073F;
-    --primary3: #ac0045b4;
-    --primary4: #6F2232;
+    --primary1: #e4e6eb;
+    --primary3: #3a3b3c;
+    --primary4: #242526;
     --secondary1: #0C72CF;
     --secondary2: #E93B3B;
     --color1: #FFFFFF;
@@ -9,8 +9,8 @@
     --color3: #BFBFBF;
     --color4: #4E4E50;
     --color5: #26262b;
-    --color6: #1A1A1D;
-    --color7: #000000;
+    --color6: #18191a;
+    --color7: #e4e6eb;
 }
 
 
@@ -27,8 +27,8 @@
     --color-navbar-Background: var(--color5); 
     --color-Background: var(--color6);
     --color-post-outer-text: var(--color7);
-    --color-chat-input-text-fg: var(--color7);
-    --color-chat-otherUser-text-fg: var(--color7);
+    --color-chat-input-text-fg: var(--color6);
+    --color-chat-otherUser-text-fg: var(--color6);
     
 
     --color-background-text: var(--primary1);

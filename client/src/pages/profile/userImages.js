@@ -3,14 +3,22 @@ import empty_profile from "../../assets/images/emptyProfile.png";
 
 export default function UserImages({userInfoData, ownerProfileVisited}){
     const username = userInfoData.username;
+
+    function onImageSubmit(){
+        console.log("uploading image");
+    }
+
     return (
         <div>
+            {/* background image */}
             <div className="background-img">
                 <p>No image</p>
             </div>
+            {/* profile image */}
             <div className="pofile-img-container">
                 <img src={empty_profile} className="profile-img" alt="profile" />
             </div>
+            {/* user name */}
             <div>
                 <h1 className="text-center">
                     {username}        
@@ -50,7 +58,8 @@ export default function UserImages({userInfoData, ownerProfileVisited}){
                                         </small>
                                         <div className="modal-footer">
                                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" className="btn btn-primary">Upload image</button>
+                                            <button type="button" className="btn btn-primary"
+                                                    onClick={onImageSubmit}>Upload image</button>
                                         </div>
                                     </form>
                                 </div>

@@ -66,7 +66,7 @@ export default function ReceivedInvitations({invitations}){
                                 src={empty_profile} 
                                 alt= {invitations[id].username + " profile"}/>
                         </Link>
-                        <Link to={"/profile/"+id} className="ms-2 invitation-user-link" style={{color:"black",textDecoration:"none"}}>
+                        <Link to={"/profile/"+id} className="ms-2 invitation-user-link" style={{color:"var(--color-post-outer-text)",textDecoration:"none"}}>
                             {invitations[id].username}
                         </Link>
                         <div className="invitation-buttons">
